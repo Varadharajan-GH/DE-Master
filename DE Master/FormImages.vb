@@ -10,6 +10,7 @@
     Dim mRect As Rectangle
     Dim totSeqs As Integer
     Dim imgCount As Integer
+    Dim PanelImgCount As Integer
     Dim panelCount As Integer
     Dim inClipName As String
     Private SrcX As Integer
@@ -71,7 +72,9 @@
             If pnlImg IsNot Nothing Then pnlImages.ScrollControlIntoView(pnlImg.First)
         Catch ex As Exception
         End Try
+        PanelImgCount = 0
         For i As Integer = first To last
+            PanelImgCount += 1
             If pnlImg(ctr) Is Nothing Then
                 pnlImg(ctr) = New Panel
                 pnlImg(ctr).Name = "pnlImg-" & i
@@ -168,6 +171,9 @@
             cmdToCrop(ctr).Top = pnlImg(ctr).Top + 50
             cmdFromCrop(ctr).Left = pnlImg(ctr).Right + 10
             cmdFromCrop(ctr).Top = pnlImg(ctr).Top + 100
+
+            cmdToCrop(ctr).Visible = True
+            cmdFromCrop(ctr).Visible = True
 
             ctr += 1
         Next
@@ -314,14 +320,22 @@
     End Sub
 
     Private Sub cmdSave_Click(sender As Object, e As EventArgs) Handles cmdSave.Click
-        For i As Integer = 0 To totSeqs - 1
+        For i As Integer = 0 To PanelImgCount - 1
             If pbImages(i).Image IsNot Nothing Then
                 If pbImages(i).Image.Width > 100 Then
                     Dim strPath As String = frmMain.strInPath & lblImages(i).Text & ".TIF"
                     If My.Computer.FileSystem.FileExists(strPath) Then
-                        My.Computer.FileSystem.DeleteFile(strPath)
+                        Try
+                            My.Computer.FileSystem.DeleteFile(strPath)
+                        Catch ex As Exception
+                            MsgBox("Could not delete img: " & strPath)
+                        End Try
                     End If
-                    pbImages(i).Image.Save(strPath)
+                    Try
+                        pbImages(i).Image.Save(strPath)
+                    Catch ex As Exception
+                        MsgBox("Could not save img: " & strPath)
+                    End Try
                 End If
             End If
         Next
@@ -348,6 +362,7 @@
 
     Private Sub lblFirst_Click(sender As Object, e As EventArgs) Handles lblFirst.Click
         'pnlImages.First.BringToFront()
+        cmdSave.PerformClick()
         If totSeqs < 100 Then imgCount = totSeqs Else imgCount = 100
         LoadPanel(0, imgCount - 1)
         lblCurrent.Text = "1"
@@ -355,11 +370,13 @@
 
     Private Sub lblLast_Click(sender As Object, e As EventArgs) Handles lblLast.Click
         'pnlImages.Last.BringToFront()
+        cmdSave.PerformClick()
         lblCurrent.Text = Convert.ToString(Math.Ceiling(totSeqs / 100))
         LoadPanel(CInt(lblCurrent.Text - 1) * 100, totSeqs - 1)
     End Sub
 
     Private Sub lblPre_Click(sender As Object, e As EventArgs) Handles lblPre.Click
+        cmdSave.PerformClick()
         If lblCurrent.Text = "1" Then
             Exit Sub
         End If
@@ -369,6 +386,7 @@
     End Sub
 
     Private Sub lblNext_Click(sender As Object, e As EventArgs) Handles lblNext.Click
+        cmdSave.PerformClick()
         If lblCurrent.Text = Convert.ToString(Math.Ceiling(totSeqs / 100)) Then
             Exit Sub
         End If

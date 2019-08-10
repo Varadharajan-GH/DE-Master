@@ -184,7 +184,7 @@ Partial Class frmMain
         'txtTitle
         '
         Me.txtTitle.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtTitle.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTitle.Font = New System.Drawing.Font("Consolas", 15.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTitle.Location = New System.Drawing.Point(79, 125)
         Me.txtTitle.MaxLength = 256
         Me.txtTitle.Multiline = True
@@ -377,6 +377,7 @@ Partial Class frmMain
         Me.lvlist.ForeColor = System.Drawing.Color.Yellow
         Me.lvlist.FullRowSelect = True
         Me.lvlist.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+        Me.lvlist.HideSelection = False
         Me.lvlist.Location = New System.Drawing.Point(14, 9)
         Me.lvlist.MultiSelect = False
         Me.lvlist.Name = "lvlist"
@@ -445,126 +446,126 @@ Partial Class frmMain
         '
         Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(35, 20)
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "&File"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(93, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'EditToolStripMenuItem
         '
         Me.EditToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddRefToolStripMenuItem, Me.DeleteRefToolStripMenuItem})
         Me.EditToolStripMenuItem.Name = "EditToolStripMenuItem"
-        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(39, 20)
         Me.EditToolStripMenuItem.Text = "&Edit"
         '
         'AddRefToolStripMenuItem
         '
         Me.AddRefToolStripMenuItem.Name = "AddRefToolStripMenuItem"
-        Me.AddRefToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.AddRefToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.AddRefToolStripMenuItem.Text = "Add Ref      (Ctrl+A)"
         '
         'DeleteRefToolStripMenuItem
         '
         Me.DeleteRefToolStripMenuItem.Name = "DeleteRefToolStripMenuItem"
-        Me.DeleteRefToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.DeleteRefToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.DeleteRefToolStripMenuItem.Text = "Delete Ref  (Ctrl+D)"
         '
         'DoneToolStripMenuItem
         '
         Me.DoneToolStripMenuItem.Name = "DoneToolStripMenuItem"
-        Me.DoneToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
+        Me.DoneToolStripMenuItem.Size = New System.Drawing.Size(76, 20)
         Me.DoneToolStripMenuItem.Text = "&Done (F10)"
         '
         'PrevToolStripMenuItem
         '
         Me.PrevToolStripMenuItem.Name = "PrevToolStripMenuItem"
-        Me.PrevToolStripMenuItem.Size = New System.Drawing.Size(64, 20)
+        Me.PrevToolStripMenuItem.Size = New System.Drawing.Size(65, 20)
         Me.PrevToolStripMenuItem.Text = "&Prev (F4)"
         '
         'NextToolStripMenuItem
         '
         Me.NextToolStripMenuItem.Name = "NextToolStripMenuItem"
-        Me.NextToolStripMenuItem.Size = New System.Drawing.Size(65, 20)
+        Me.NextToolStripMenuItem.Size = New System.Drawing.Size(67, 20)
         Me.NextToolStripMenuItem.Text = "&Next (F3)"
         '
         'SuspendToolStripMenuItem
         '
         Me.SuspendToolStripMenuItem.Name = "SuspendToolStripMenuItem"
-        Me.SuspendToolStripMenuItem.Size = New System.Drawing.Size(89, 20)
+        Me.SuspendToolStripMenuItem.Size = New System.Drawing.Size(93, 20)
         Me.SuspendToolStripMenuItem.Text = "&Suspend (F11)"
         '
         'QueryToolStripMenuItem
         '
         Me.QueryToolStripMenuItem.Name = "QueryToolStripMenuItem"
-        Me.QueryToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
+        Me.QueryToolStripMenuItem.Size = New System.Drawing.Size(51, 20)
         Me.QueryToolStripMenuItem.Text = "Query"
         '
         'ARTNToolStripMenuItem
         '
         Me.ARTNToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddToolStripMenuItem, Me.DeleteToolStripMenuItem})
         Me.ARTNToolStripMenuItem.Name = "ARTNToolStripMenuItem"
-        Me.ARTNToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
+        Me.ARTNToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.ARTNToolStripMenuItem.Text = "ARTN"
         '
         'AddToolStripMenuItem
         '
         Me.AddToolStripMenuItem.Name = "AddToolStripMenuItem"
-        Me.AddToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
+        Me.AddToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.AddToolStripMenuItem.Text = "Add      (Ctrl+F7)"
         '
         'DeleteToolStripMenuItem
         '
         Me.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem"
-        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
+        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
         Me.DeleteToolStripMenuItem.Text = "Delete  (Alt+F7)"
         '
         'OptionsToolStripMenuItem
         '
         Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ThemeColorToolStripMenuItem, Me.EnableLogToolStripMenuItem})
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(56, 20)
+        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "Options"
         '
         'ThemeColorToolStripMenuItem
         '
         Me.ThemeColorToolStripMenuItem.Name = "ThemeColorToolStripMenuItem"
-        Me.ThemeColorToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
+        Me.ThemeColorToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.ThemeColorToolStripMenuItem.Text = "Theme color"
         '
         'EnableLogToolStripMenuItem
         '
         Me.EnableLogToolStripMenuItem.CheckOnClick = True
         Me.EnableLogToolStripMenuItem.Name = "EnableLogToolStripMenuItem"
-        Me.EnableLogToolStripMenuItem.Size = New System.Drawing.Size(132, 22)
+        Me.EnableLogToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.EnableLogToolStripMenuItem.Text = "Enable Log"
         '
         'HelpToolStripMenuItem
         '
         Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem, Me.ContentsToolStripMenuItem, Me.AdminToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(153, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
         Me.AboutToolStripMenuItem.Text = "About"
         '
         'ContentsToolStripMenuItem
         '
         Me.ContentsToolStripMenuItem.Name = "ContentsToolStripMenuItem"
-        Me.ContentsToolStripMenuItem.Size = New System.Drawing.Size(153, 22)
+        Me.ContentsToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
         Me.ContentsToolStripMenuItem.Text = "Contents     (F1)"
         '
         'AdminToolStripMenuItem
         '
         Me.AdminToolStripMenuItem.Name = "AdminToolStripMenuItem"
-        Me.AdminToolStripMenuItem.Size = New System.Drawing.Size(153, 22)
+        Me.AdminToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
         Me.AdminToolStripMenuItem.Text = "Admin"
         '
         'GroupBox1
@@ -607,7 +608,7 @@ Partial Class frmMain
         'tsslStatus
         '
         Me.tsslStatus.Name = "tsslStatus"
-        Me.tsslStatus.Size = New System.Drawing.Size(100, 17)
+        Me.tsslStatus.Size = New System.Drawing.Size(106, 17)
         Me.tsslStatus.Text = "De Master is Ready"
         '
         'Panel1

@@ -668,11 +668,13 @@ Public Class frmMain
     Private Sub txtTitle_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtTitle.KeyPress
         If Asc(e.KeyChar) = Keys.Space Then
             If txtTitle.SelectionStart = 0 Then Exit Sub
-            If txtTitle.Text.Chars(txtTitle.SelectionStart - 1) = " " Then
-                txtTitle.SelectionStart = txtTitle.SelectionStart - 1
+            If Not txtTitle.Text.Trim.StartsWith("COMMUNICATION") Then
+                If txtTitle.Text.Chars(txtTitle.SelectionStart - 1) = " " Then
+                    txtTitle.SelectionStart = txtTitle.SelectionStart - 1
+                End If
             End If
         End If
-        If Asc(e.KeyChar) = Keys.Enter Then
+            If Asc(e.KeyChar) = Keys.Enter Then
             cmdNext.Focus()
             cmdNext.PerformClick()
             e.Handled = True
@@ -927,10 +929,17 @@ Public Class frmMain
     End Sub
 
     Private Sub txtTitle_Leave(sender As Object, e As EventArgs) Handles txtTitle.Leave
+        txtTitle.Text = txtTitle.Text.Trim
+        If txtTitle.Text.StartsWith("COMMUNICATION") Then
+            If Not Regex.Match(txtTitle.Text, "^(COMMUNICATION)\s{3}\d{4}$").Success Then
+                MsgBox("COMMUNICATION should be followed by 3 spaces and then by 4 digits (20 Chars)" & vbCrLf &
+                       "eg. COMMUNICATION   0805")
+            End If
+        End If
         On Error GoTo addtitle
         If xnlCitations Is Nothing Then Exit Sub
         If iNo = xnlCitations.Count Then Exit Sub
-        txtTitle.Text = bumpSpace(txtTitle.Text)
+        'txtTitle.Text = bumpSpace(txtTitle.Text)
         If lvlist.Items.Count > iNo Then lvlist.Items(curRef).SubItems(5).Text = txtTitle.Text
         On Error GoTo 0
         Exit Sub
@@ -944,8 +953,12 @@ addtitle:
 
     Private Sub txtTitle_TextChanged(sender As Object, e As EventArgs) Handles txtTitle.TextChanged
         Dim selst As Integer = txtTitle.SelectionStart
-        txtTitle.Text = bumpSpace(Regex.Replace(txtTitle.Text, "[^a-zA-Z0-9* ]+", String.Empty))
-        'txtTitle.Text = txtTitle.Text.Replace("-", String.Empty)
+        txtTitle.Text = Regex.Replace(txtTitle.Text, "[^a-zA-Z0-9* ]+", String.Empty)
+        If Not txtTitle.Text.Trim.StartsWith("COMMUNICATION") Then
+            txtTitle.Text = bumpSpace(Regex.Replace(txtTitle.Text, "[^a-zA-Z0-9* ]+", String.Empty))
+        Else
+            txtTitle.Text = Regex.Replace(txtTitle.Text, "[^a-zA-Z0-9* ]+", String.Empty)
+        End If
         txtTitle.SelectionStart = selst
         lblTitChars.Text = txtTitle.TextLength
     End Sub
@@ -1142,12 +1155,17 @@ addYear:
                     PS = PS & ch
                 End If
             Next
-            If PI = 0 Then
+            If (PI = 0) And (Not txtAuthor.Text.StartsWith("&")) Then
                 MsgBox("Page number should not be zero", MsgBoxStyle.Information, "Verify")
                 txtPage.Focus()
                 Exit Sub
             End If
-            NewStr = PS & PI.ToString.PadLeft(5 - PS.Length)
+            If PI = 0 Then
+                NewStr = PS
+            Else
+                NewStr = PS & PI.ToString.PadLeft(5 - PS.Length)
+            End If
+
             'spaces = Space(5 - pText.Length)
             'For iCnt = 1 To pText.Length
             '    If Char.IsDigit((Mid(pText, iCnt, 1))) Then
@@ -1668,7 +1686,11 @@ addtitle:
         'On Error Resume Next
         Log_Load("Moving " & strFile & " to " & strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML")
 
+        If IO.File.Exists(strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML") Then
+            FileSystem.Kill(strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML")
+        End If
         My.Computer.FileSystem.MoveFile(strFile, strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML", True)
+
         strInFile = strInFile.Replace(".tmp", ".XML")
         strFile = strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML"
         Log_Load("Loading " & strFile)
