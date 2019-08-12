@@ -2453,7 +2453,7 @@ Error_Loadfile:
                 If Not IO.File.Exists(Replace(fileName, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
                     My.Computer.FileSystem.RenameFile(fileName, Replace(IO.Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
                 End If
-                pbSource.ImageLocation = IO.Path.GetDirectoryName(fileName) & "\" & Replace(IO.Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)
+                'pbSource.ImageLocation = IO.Path.GetDirectoryName(fileName) & "\" & Replace(IO.Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)
             End If
 
             If IO.File.Exists(IO.Path.GetDirectoryName(fileName) & "\" & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last) Then
@@ -3653,8 +3653,8 @@ Error_Loadfile:
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         Dim sbAbout As New System.Text.StringBuilder
         sbAbout.AppendLine("DE Master for VIL")
-        sbAbout.AppendLine("Version 12.5.1")
-        sbAbout.AppendLine("Stamp 1907160903")
+        sbAbout.AppendLine("Version 12.4.5")
+        sbAbout.AppendLine("Stamp 1908101431")
         MsgBox(sbAbout.ToString)
     End Sub
 

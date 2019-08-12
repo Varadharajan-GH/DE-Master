@@ -1,8 +1,8 @@
 ﻿
 Public Class frmLogin
 
-    'Public Const SOURCEPATH As String = ".\"
-    Public Const SOURCEPATH As String = "D:\data\C_Process\"
+    Public Const SOURCEPATH As String = ".\"
+    'Public Const SOURCEPATH As String = "D:\data\C_Process\"
 
     Dim usersFile As String = SOURCEPATH & "Admin\users.txt"
 

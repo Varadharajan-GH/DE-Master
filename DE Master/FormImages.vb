@@ -63,16 +63,24 @@
 
     Private Sub LoadPanel(first As Integer, last As Integer)
         Dim ctr As Integer = 0
+        Me.SuspendLayout()
         For i As Integer = 0 To Math.Min(last, 99)
             If pnlImg(i) IsNot Nothing Then pnlImg(i).Visible = False
             If cmdToCrop(i) IsNot Nothing Then cmdToCrop(i).Visible = False
             If cmdFromCrop(i) IsNot Nothing Then cmdFromCrop(i).Visible = False
+            Try
+                pbImages(i).ImageLocation = ""
+                pbImages(i).SizeMode = PictureBoxSizeMode.Zoom
+            Catch ex As Exception
+            End Try
         Next
+        'Me.PerformLayout()
         Try
             If pnlImg IsNot Nothing Then pnlImages.ScrollControlIntoView(pnlImg.First)
         Catch ex As Exception
         End Try
         PanelImgCount = 0
+        'Me.SuspendLayout()
         For i As Integer = first To last
             PanelImgCount += 1
             If pnlImg(ctr) Is Nothing Then
@@ -177,6 +185,7 @@
 
             ctr += 1
         Next
+        Me.PerformLayout()
     End Sub
 
     Private Sub cmdToCrop_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -353,6 +362,7 @@
         Else
             Try
                 pbSource.ImageLocation = frmMain.strInPath & cbBackup.SelectedItem & ".TIF"
+                spCropper.Panel1.AutoScrollPosition = New Point(0, 0)
             Catch ex As Exception
                 MsgBox(ex.Message)
             End Try

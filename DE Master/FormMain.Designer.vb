@@ -1274,17 +1274,15 @@ Partial Class frmMain
         Me.pnlDesImage.Controls.Add(Me.pbImage)
         Me.pnlDesImage.Location = New System.Drawing.Point(11, 559)
         Me.pnlDesImage.Name = "pnlDesImage"
-        Me.pnlDesImage.Size = New System.Drawing.Size(1786, 269)
+        Me.pnlDesImage.Size = New System.Drawing.Size(1786, 285)
         Me.pnlDesImage.TabIndex = 34
         '
         'pbImage
         '
-        Me.pbImage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pbImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.pbImage.Location = New System.Drawing.Point(2, 3)
+        Me.pbImage.Location = New System.Drawing.Point(3, 3)
         Me.pbImage.Name = "pbImage"
-        Me.pbImage.Size = New System.Drawing.Size(386, 165)
+        Me.pbImage.Size = New System.Drawing.Size(75, 81)
         Me.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.pbImage.TabIndex = 11
         Me.pbImage.TabStop = False
@@ -1295,6 +1293,7 @@ Partial Class frmMain
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlSource.AutoScroll = True
         Me.pnlSource.BackColor = System.Drawing.SystemColors.MenuBar
+        Me.pnlSource.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.pnlSource.Controls.Add(Me.pbSource)
         Me.pnlSource.Location = New System.Drawing.Point(148, 9)
         Me.pnlSource.Name = "pnlSource"
