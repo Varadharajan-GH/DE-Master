@@ -30,7 +30,6 @@ D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.exe.config
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.exe
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.pdb
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.xml
-D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbprojAssemblyReference.cache
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmLogin.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmMain.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmImages.resources

@@ -1,4 +1,6 @@
-﻿Public Class frmImages
+﻿Imports System.ComponentModel
+
+Public Class frmImages
     Dim cits As Xml.XmlNodeList
     Dim pnlImg As Panel()
     'Dim pnlImages As Panel()
@@ -340,6 +342,7 @@
                             MsgBox("Could not delete img: " & strPath)
                         End Try
                     End If
+
                     Try
                         pbImages(i).Image.Save(strPath)
                     Catch ex As Exception
@@ -460,5 +463,12 @@
         LBSetEnd.Enabled = False
         LBCut.Enabled = False
         StartX = -1 : StartY = -1 : EndX = -1 : EndY = -1
+    End Sub
+
+    Private Sub frmImages_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.cbBackup.Items.Clear()
+        For Each TIF As String In IO.Directory.GetFiles(frmMain.strInPath, IO.Path.GetFileNameWithoutExtension(frmMain.getInFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly)
+            frmMain.cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
+        Next
     End Sub
 End Class

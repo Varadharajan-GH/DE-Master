@@ -1815,6 +1815,7 @@ addtitle:
                 If Not TIF.Contains("BU") Then
                     If Not IO.File.Exists(Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
                         IO.File.Copy(TIF, Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
+                        cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF) & "-BU")
                     End If
                 End If
                 cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
@@ -1825,8 +1826,9 @@ addtitle:
             End If
         Next
 
+
         lblSTime.Text = Now.ToShortTimeString
-        strFindString(txtOCR.Text)
+            strFindString(txtOCR.Text)
         txtAuthor.Focus()
         txtAuthor.SelectionStart = 0
         txtAuthor.SelectionLength = 0
