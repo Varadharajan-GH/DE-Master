@@ -40,3 +40,4 @@ D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbproj.CoreCompile
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.exe
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.xml
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.pdb
+D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbprojAssemblyReference.cache
