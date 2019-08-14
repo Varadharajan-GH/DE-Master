@@ -477,59 +477,6 @@ Public Class frmMain
         End If
     End Sub
 
-    'Private Sub txtAuthor_KeyDown(sender As Object, e As KeyEventArgs) Handles txtAuthor.KeyDown
-    'If e.KeyCode = Keys.Return Then
-    '    txtVolume.Focus()
-    '    e.SuppressKeyPress = True
-    '    Exit Sub
-    'ElseIf e.KeyCode = Keys.OemMinus Then
-    '    txtAuthor.Clear()
-    '    e.SuppressKeyPress = True
-    '    Exit Sub
-    'ElseIf e.KeyCode = Keys.F7 Then
-    '    txtAuthor.Clear()
-    '    e.Handled = True
-    '    Exit Sub
-    'End If
-    'If (Char.IsControl(ChrW(e.KeyCode)) = False) Then
-    '    If Char.IsPunctuation(ChrW(e.KeyCode)) Then
-    '        If e.KeyCode = Asc("*") Or e.KeyCode = ("&") Then
-    '            If txtAuthor.SelectionStart > 0 Then
-    '                MsgBox(" */& allowed only at beginning", MsgBoxStyle.Information, "Verify")
-    '                e.Handled = True
-    '                txtAuthor.Focus()
-    '                txtAuthor.SelectionStart = txtAuthor.Text.Length
-    '                txtAuthor.SelectionLength = 0
-    '                Exit Sub
-    '            End If
-    '        ElseIf e.KeyCode = "." Then
-    '            If txtAuthor.Text.Length <> 15 Then
-    '                MsgBox("Dot Allowed only after 15 chars!", MsgBoxStyle.Information, "Verify")
-    '                e.Handled = True
-    '                txtAuthor.Focus()
-    '                txtAuthor.SelectionStart = txtAuthor.Text.Length
-    '                txtAuthor.SelectionLength = 0
-    '                Exit Sub
-    '            End If
-    '        Else
-    '            MsgBox("Illegal character", MsgBoxStyle.Information, "Verify")
-    '            e.Handled = True
-    '            txtAuthor.Focus()
-    '            txtAuthor.SelectionStart = txtAuthor.Text.Length
-    '            txtAuthor.SelectionLength = 0
-    '            Exit Sub
-    '        End If
-    '    ElseIf Char.IsSymbol(ChrW(e.KeyCode)) Then
-    '        MsgBox("Illegal character", MsgBoxStyle.Information, "Verify")
-    '        e.Handled = True
-    '        txtAuthor.Focus()
-    '        txtAuthor.SelectionStart = txtAuthor.Text.Length
-    '        txtAuthor.SelectionLength = 0
-    '        Exit Sub
-    '    End If
-    'End If
-    'End Sub
-
     Private Sub txtAuthor_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAuthor.KeyPress
         If Asc(e.KeyChar) = Keys.Space Then
             If txtAuthor.SelectionStart = 0 Then Exit Sub
@@ -932,8 +879,11 @@ Public Class frmMain
         txtTitle.Text = txtTitle.Text.Trim
         If txtTitle.Text.StartsWith("COMMUNICATION") Then
             If Not Regex.Match(txtTitle.Text, "^(COMMUNICATION)\s{3}\d{4}$").Success Then
-                MsgBox("COMMUNICATION should be followed by 3 spaces and then by 4 digits (20 Chars)" & vbCrLf &
-                       "eg. COMMUNICATION   0805")
+                tsslStatus.Text = "COMMUNICATION should be followed by 3 spaces and then by 4 digits (20 Chars)"
+                txtTitle.BackColor = Color.Pink
+            Else
+                tsslStatus.Text = "COMMUNICATION Title valid"
+                txtTitle.BackColor = Color.White
             End If
         End If
         On Error GoTo addtitle
