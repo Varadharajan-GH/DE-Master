@@ -2474,24 +2474,29 @@ Error_Loadfile:
     End Sub
 
     Private Sub cmdLoadBackup_Click(sender As Object, e As EventArgs) Handles cmdLoadBackup.Click
-        If cbBackup.SelectedItem = vbNullString Then
+        If cbBackup.Text.Trim = vbNullString Then
             MsgBox("Select file")
             Exit Sub
         Else
             Dim temppath As String
-            'If bIsPrior Then
-            '    temppath = strPriorPath
-            'Else
-            '    temppath = strInPath
-            'End If
             temppath = strInPath
-
-            If IO.File.Exists(temppath & cbBackup.SelectedItem & ".TIF") Then
-                pbSource.ImageLocation = temppath & cbBackup.SelectedItem & ".TIF"
+            If FormMode.chosenTool = ToolMode.OP Then
+                If IO.File.Exists(temppath & cbBackup.Text & ".TIF") Then
+                    pbSource.ImageLocation = temppath & cbBackup.Text & ".TIF"
+                Else
+                    MsgBox("Invalid file name")
+                    Exit Sub
+                End If
             Else
-                MsgBox("Invalid file name")
-                Exit Sub
+                If IO.File.Exists(temppath & cbBackup.Text & "-BU.TIF") Then
+                    pbSource.ImageLocation = temppath & cbBackup.Text & "-BU.TIF"
+                Else
+                    MsgBox("Invalid file name")
+                    Exit Sub
+                End If
             End If
+
+
         End If
     End Sub
 

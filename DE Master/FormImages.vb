@@ -466,9 +466,11 @@ Public Class frmImages
     End Sub
 
     Private Sub frmImages_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        frmMain.cbBackup.Items.Clear()
-        For Each TIF As String In IO.Directory.GetFiles(frmMain.strInPath, IO.Path.GetFileNameWithoutExtension(frmMain.getInFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly)
-            frmMain.cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
-        Next
+        If FormMode.chosenTool = ToolMode.OP Then
+            frmMain.cbBackup.Items.Clear()
+            For Each TIF As String In IO.Directory.GetFiles(frmMain.strInPath, IO.Path.GetFileNameWithoutExtension(frmMain.getInFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly)
+                frmMain.cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
+            Next
+        End If
     End Sub
 End Class
