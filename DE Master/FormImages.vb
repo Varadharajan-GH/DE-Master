@@ -468,9 +468,25 @@ Public Class frmImages
     Private Sub frmImages_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         If FormMode.chosenTool = ToolMode.OP Then
             frmMain.cbBackup.Items.Clear()
-            For Each TIF As String In IO.Directory.GetFiles(frmMain.strInPath, IO.Path.GetFileNameWithoutExtension(frmMain.getInFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly)
+            For Each TIF As String In IO.Directory _
+                .GetFiles(frmMain.strInPath, IO.Path.GetFileNameWithoutExtension(frmMain.getInFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly) _
+                .OrderBy(Function(f)
+                             Return FormatFilenameForSort(f)
+                         End Function)
                 frmMain.cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
             Next
         End If
     End Sub
+
+    Private Function FormatFilenameForSort(file As String) As String
+        Dim item As String
+        item = IO.Path.GetFileNameWithoutExtension(file).Split("_").LastOrDefault()
+        If IsNumeric(item) Then
+            item = CInt(item).ToString("D10")
+        Else
+            item = New String("0", 10 - item.Length) & item
+        End If
+        Return item
+    End Function
+
 End Class

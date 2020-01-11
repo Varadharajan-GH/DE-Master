@@ -1,24 +1,27 @@
 ﻿
+Imports System.IO
+Imports DEM_VIL_Library
+
 Public Class frmLogin
 
-    Public Const SOURCEPATH As String = ".\"
+    'Public Const SOURCEPATH As String = ".\"
     'Public Const SOURCEPATH As String = "D:\data\C_Process\"
 
-    Dim usersFile As String = SOURCEPATH & "Admin\users.txt"
+    Dim usersFile As String = Path.Combine(SettingsReader.ReadSetting("SOURCE_PATH"), SettingsReader.ReadSetting("USERS_FILE"))
 
-    Private Sub cmdExit_Click(sender As Object, e As EventArgs)
+    Private Sub ExitButton_Click(sender As Object, e As EventArgs)
         Application.Exit()
     End Sub
 
-    Private Sub cmdLogin_Click(sender As Object, e As EventArgs) Handles cmdLogin.Click
+    Private Sub LoginButton_Click(sender As Object, e As EventArgs) Handles cmdLogin.Click
         Dim bLoggedIn As Boolean = False
-        Dim TextLine As String = ""
 
-        If System.IO.File.Exists(usersFile) = True Then
-            Dim objReader As New System.IO.StreamReader(usersFile)
+        If File.Exists(usersFile) = True Then
+            Dim objReader As New StreamReader(usersFile)
 
             Do While (objReader.Peek() <> -1 And bLoggedIn = False)
-                TextLine = objReader.ReadLine()
+                Dim TextLine As String = objReader.ReadLine()
+
                 If TextLine = txtUserName.Text & " " & txtPassword.Text Then
                     bLoggedIn = True
                     txtPassword.Clear()
@@ -44,15 +47,15 @@ Public Class frmLogin
         End If
     End Sub
 
-    Private Sub frmLogin_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+    Private Sub FormLogin_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
         FormMode.Show()
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub FormLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
         txtUserName.Focus()
     End Sub
 
-    Private Sub txtUserName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUserName.KeyPress
+    Private Sub TextUserName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUserName.KeyPress
         If Asc(e.KeyChar) = 13 Then
             txtPassword.Focus()
             txtPassword.SelectAll()
@@ -60,7 +63,7 @@ Public Class frmLogin
         End If
     End Sub
 
-    Private Sub txtPassword_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPassword.KeyPress
+    Private Sub TextPassword_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPassword.KeyPress
         If Asc(e.KeyChar) = 13 Then
             cmdLogin.Focus()
             e.Handled = True

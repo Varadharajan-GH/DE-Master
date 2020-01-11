@@ -103,6 +103,7 @@ Partial Class frmImages
         '
         'pbSource
         '
+        Me.pbSource.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pbSource.Location = New System.Drawing.Point(3, 3)
         Me.pbSource.Name = "pbSource"
         Me.pbSource.Size = New System.Drawing.Size(100, 50)
@@ -112,6 +113,7 @@ Partial Class frmImages
         '
         'pbOut
         '
+        Me.pbOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pbOut.Location = New System.Drawing.Point(3, 3)
         Me.pbOut.Name = "pbOut"
         Me.pbOut.Size = New System.Drawing.Size(100, 50)

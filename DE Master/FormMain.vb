@@ -1,80 +1,104 @@
 ﻿Option Explicit On
 
-Imports System.Xml
+Imports System.IO
 Imports System.Text.RegularExpressions
+Imports System.Xml
+Imports DEM_VIL_Library
 
-Structure Log
-    Dim System_Type As String
-    Dim System As String
-    Dim Session_Start_Date As String
-    Dim Session_Start_Time As String
-    Dim Session_End_Date As String
-    Dim Session_End_Time As String
-    Dim Session_Production As String
-    Dim Session_Suspend As String
-    Dim Item_Accession As String
-    Dim Item_Itemno As String
-    Dim Status As String
-    Dim References_Open As String
-    Dim References_Close As String
-    Dim References_Inserted As String
-    Dim References_Deleted As String
-End Structure
+'Structure Log
+'    Dim System_Type As String
+'    Dim System As String
+'    Dim Session_Start_Date As String
+'    Dim Session_Start_Time As String
+'    Dim Session_End_Date As String
+'    Dim Session_End_Time As String
+'    Dim Session_Production As String
+'    Dim Session_Suspend As String
+'    Dim Item_Accession As String
+'    Dim Item_Itemno As String
+'    Dim Status As String
+'    Dim References_Open As String
+'    Dim References_Close As String
+'    Dim References_Inserted As String
+'    Dim References_Deleted As String
+'End Structure
 
 Public Class frmMain
-    Dim srcPath As String = frmLogin.SOURCEPATH
-    Dim xmlDoc As New XmlDocument(), xnlCitations As XmlNodeList
-    Dim iNo As Integer, strInFile As String, curRef As Integer
+    Private srcPath As String
+    Private ReadOnly xmlDoc As New XmlDocument()
+    Private xnlCitations As XmlNodeList
+    Private iNo As Integer, strInFile As String, curRef As Integer
     Public strInPath As String
-    Dim strOutPath As String
-    Dim strTempPath As String
-    Dim strHelpPath As String
-    Dim strLogPath As String
-    Dim strQueryPath As String
-    Dim dtSTime As DateTime
-    Dim bNTR() As Boolean
-    Dim bPattent() As Boolean
-    Dim swProdTime As Stopwatch = New Stopwatch
-    Dim swSuspTime As Stopwatch = New Stopwatch
-    Dim swCurProd As Stopwatch = New Stopwatch
-    Dim swCurSusp As Stopwatch = New Stopwatch
-    Dim strPriorPath As String
-    Dim strCurPath As String
-    Dim strInvalidPath As String
-    Dim iCompItems As Integer, iCompRefs As Integer
-    Dim policyFile As String = srcPath & "Admin\policy.txt"
-    Dim RepFile As String = srcPath & "Admin\DCI Repository.XML"
-    Dim mRect As Rectangle
-    Dim bIsPrior As Boolean
-    Dim bIsPatent As Boolean
-    Dim LogEntry As New Log
-    Dim LogLoadFile As String
-    Dim LogDoneFile As String
+    Private strOutPath As String
+    Private strTempPath As String
+    Private strHelpPath As String
+    Private strLogPath As String
+    Private strQueryPath As String
+    Private dtSTime As Date
+    Private bNTR() As Boolean
+    Private bPattent() As Boolean
+    Private swProdTime As Stopwatch = New Stopwatch
+    Private swSuspTime As Stopwatch = New Stopwatch
+    Private swCurProd As Stopwatch = New Stopwatch
+    Private swCurSusp As Stopwatch = New Stopwatch
+    Private strPriorPath As String
+    Private strCurPath As String
+    Private strInvalidPath As String
+    Private iCompItems As Integer, iCompRefs As Integer
+    Private policyFile As String
+    Private RepFile As String
+    Private MAX_TITLE_LENGTH As Integer
+    Private mRect As Rectangle
+    Private bIsPrior As Boolean
+    Private bIsPatent As Boolean
+    Private LogEntry As UserLog
+    Private LogLoadFile As String
+    Private LogDoneFile As String
+    Private MovedFiles As Integer
+    Private QC_Control As Integer
+    Private PBImageLocation As String
+    Private PBSourceLocation As String
+
+    Private RQC_Enabled As String
+    Private RQCFile As String
+    Private RQCExportDir As String
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         Dim i As Integer
 
+        srcPath = SettingsReader.ReadSetting("SOURCE_PATH")
+        RQCExportDir = Path.Combine(srcPath, "QC\Export\" & Date.Now.ToString("yyyyMMdd") & "\")
         If FormMode.chosenTool = ToolMode.QC Then
-            strInPath = srcPath & "Output\"
-            strCurPath = srcPath & "QC\Current\"
-            strPriorPath = srcPath & "QC\Priority\"
-            strOutPath = srcPath & "QC\Output\"
-            strTempPath = srcPath & "QC\Temp\"
-            strInvalidPath = srcPath & "QC\Invalid\"
-            strHelpPath = srcPath & "Help\"
-            strQueryPath = srcPath & "QC\Query\"
-            strLogPath = srcPath & "QC\C_Logs\" & Format(Today, "yyyyMMdd") & "\"
+            strInPath = Path.Combine(srcPath, "Output\")
+            strCurPath = Path.Combine(srcPath, "QC\Current\")
+            strPriorPath = Path.Combine(srcPath, "QC\Priority\")
+            strOutPath = Path.Combine(srcPath, "QC\Output\")
+            strTempPath = Path.Combine(srcPath, "QC\Temp\")
+            strInvalidPath = Path.Combine(srcPath, "QC\Invalid\")
+            strHelpPath = Path.Combine(srcPath, "Help\")
+            strQueryPath = Path.Combine(srcPath, "QC\Query\")
+            strLogPath = Path.Combine(srcPath, "QC\C_Logs\", Format(Today, "yyyyMMdd") & "\")
         Else
-            strInPath = srcPath & "Input\"
-            strCurPath = srcPath & "Current\"
-            strPriorPath = srcPath & "Priority\"
-            strOutPath = srcPath & "Output\"
-            strTempPath = srcPath & "Temp\"
-            strHelpPath = srcPath & "Help\"
-            strInvalidPath = srcPath & "Invalid\"
-            strQueryPath = srcPath & "Query\"
-            strLogPath = srcPath & "C_Logs\" & Format(Today, "yyyyMMdd") & "\"
+            strInPath = Path.Combine(srcPath, "Input\")
+            strCurPath = Path.Combine(srcPath, "Current\")
+            strPriorPath = Path.Combine(srcPath, "Priority\")
+            strOutPath = Path.Combine(srcPath, "Output\")
+            strTempPath = Path.Combine(srcPath, "Temp\")
+            strHelpPath = Path.Combine(srcPath, "Help\")
+            strInvalidPath = Path.Combine(srcPath, "Invalid\")
+            strQueryPath = Path.Combine(srcPath, "Query\")
+            strLogPath = Path.Combine(srcPath, "C_Logs\" & Format(Today, "yyyyMMdd") & "\")
         End If
+
+        RQCFile = Path.Combine(RQCExportDir, frmLogin.txtUserName.Text & ".CSV")
+        policyFile = Path.Combine(srcPath, SettingsReader.ReadSetting("POLICY_FILE"))
+        RepFile = Path.Combine(srcPath, SettingsReader.ReadSetting("DCI_REPOSITORY_FILE"))
+        MAX_TITLE_LENGTH = SettingsReader.ReadSetting("MAX_TITLE_LENGTH")
+        txtTitle.MaxLength = MAX_TITLE_LENGTH
+
+        QC_Control = 0
+        RQC_Enabled = SettingsReader.ReadSetting("RQC_ENABLED")
+        LogEntry = New UserLog
 
         If Not My.Settings.MainBackColor.IsEmpty Then
             Me.BackColor = My.Settings.MainBackColor
@@ -82,8 +106,8 @@ Public Class frmMain
         End If
         txtOCR.ContextMenu = New ContextMenu()
 
-        LogLoadFile = strLogPath & "LogLoad-" & frmLogin.txtUserName.Text & ".txt"
-        LogDoneFile = strLogPath & "LogDone-" & frmLogin.txtUserName.Text & ".txt"
+        LogLoadFile = strLogPath & "LogLoad-" & frmLogin.txtUserName.Text & ".TXT"
+        LogDoneFile = strLogPath & "LogDone-" & frmLogin.txtUserName.Text & ".TXT"
 
         'Create Directories if they doesn't exist
         MakeDirectory(strCurPath)
@@ -93,9 +117,11 @@ Public Class frmMain
         MakeDirectory(strQueryPath)
         MakeDirectory(strInvalidPath)
         MakeDirectory(strLogPath)
+        MakeDirectory(RQCExportDir)
 
         iCompItems = 0
         iCompRefs = 0
+        MovedFiles = 0
         lblCompItems.Text = iCompItems
         lblCompRefs.Text = iCompRefs
         dtSTime = Now
@@ -123,10 +149,12 @@ Public Class frmMain
                     LogEntry.System_Type = "Name"
                     LogEntry.System = Net.Dns.GetHostName()
                 End If
-                fnLoadFile(strInFile)
+                If Not fnLoadFile(strInFile) Then
+                    MessageBox.Show("Unable to delete file in current folder. Manually delete in current folder. File " & Path.GetFileNameWithoutExtension(strInFile) & ".XML")
+                    File.Move(strInFile, strInFile.Replace(".tmp", ".XML"))
+                End If
             End If
         Else
-
             MakeLogFile(strLogPath & frmLogin.txtUserName.Text & ".XML")
             LogEntry.System_Type = ""
             LogEntry.System = ""
@@ -138,7 +166,10 @@ Public Class frmMain
                 LogEntry.System = Net.Dns.GetHostName()
             End If
             bIsPrior = True
-            fnLoadFile(strInFile)
+            If Not fnLoadFile(strInFile) Then
+                MessageBox.Show("Unable to delete file in current folder. Manually delete in current folder. File " & Path.GetFileNameWithoutExtension(strInFile) & ".XML")
+                File.Move(strInFile, strInFile.Replace(".tmp", ".XML"))
+            End If
         End If
     End Sub
 
@@ -252,8 +283,8 @@ Public Class frmMain
                         txtYear.SelectionStart = txtYear.Text.Length
                         txtYear.SelectionLength = 0
                     ElseIf rbTitle.Checked Then
-                        tstr = StrConv(xnlCitations(iNo - 1).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText, VbStrConv.Uppercase)
-                        If tstr.Length > 256 Then tstr = tstr.Substring(0, 256)
+                        tstr = StrConv(xnlCitations(iNo - 1).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText.Trim, VbStrConv.Uppercase)
+                        If tstr.Length > MAX_TITLE_LENGTH Then tstr = tstr.Substring(0, MAX_TITLE_LENGTH)
                         txtTitle.Text = tstr
                         txtTitle.Focus()
                         txtTitle.SelectionStart = txtTitle.Text.Length
@@ -272,7 +303,7 @@ Public Class frmMain
         End Select
     End Sub
 
-
+    'todo check images loads correctly
     Private Sub cmdPrev_Click(sender As Object, e As EventArgs) Handles cmdPrev.Click
         Log_Done("CheckDOI started")
         If bCheckDOI() = False Then Exit Sub
@@ -323,11 +354,11 @@ Public Class frmMain
             End If
 
             If MsgBox("Do you want to exit without complete current item?", MsgBoxStyle.YesNo, "Confirmation") = MsgBoxResult.Yes Then
-                If My.Computer.FileSystem.FileExists(strCurPath & System.IO.Path.GetFileName(strInFile)) Then
+                If My.Computer.FileSystem.FileExists(strCurPath & Path.GetFileName(strInFile)) Then
                     If bIsPrior Then
-                        My.Computer.FileSystem.MoveFile(strCurPath & System.IO.Path.GetFileName(strInFile), strPriorPath & System.IO.Path.GetFileName(strInFile), True)
+                        My.Computer.FileSystem.MoveFile(strCurPath & Path.GetFileName(strInFile), strPriorPath & Path.GetFileName(strInFile), True)
                     Else
-                        My.Computer.FileSystem.MoveFile(strCurPath & System.IO.Path.GetFileName(strInFile), strInPath & System.IO.Path.GetFileName(strInFile), True)
+                        My.Computer.FileSystem.MoveFile(strCurPath & Path.GetFileName(strInFile), strInPath & Path.GetFileName(strInFile), True)
                     End If
                 End If
                 Application.Exit()
@@ -342,7 +373,7 @@ Public Class frmMain
             If chkTitErr.CheckState = CheckState.Checked Then Exit Sub
             If Trim(strST) = vbNullString Then Exit Sub
             Dim tStr As String
-            tStr = Trim(strST)
+            tStr = strST.Trim
             If rbAuthor.Checked Then
                 'If tStr.Length > 18 Then tStr = tStr.Substring(0, 18)
                 If tStr.Length > 15 Then tStr = tStr.Substring(0, 15) & "."
@@ -381,7 +412,11 @@ Public Class frmMain
                 txtYear.SelectionStart = txtYear.Text.Length
                 txtYear.SelectionLength = 0
             ElseIf rbTitle.Checked Then
-                If tStr.Length > 256 Then tStr = tStr.Substring(0, 256)
+                If Not tStr.StartsWith("COMMUNICATION") Then
+                    tStr = Regex.Replace(tStr, "[^a-zA-Z0-9* ]+", String.Empty)
+                End If
+                tStr = bumpSpace(tStr).Trim
+                If tStr.Length > MAX_TITLE_LENGTH Then tStr = tStr.Substring(0, MAX_TITLE_LENGTH)
                 txtTitle.Text = tStr
                 txtTitle.Focus()
                 txtTitle.SelectionStart = txtTitle.Text.Length
@@ -621,7 +656,7 @@ Public Class frmMain
                 End If
             End If
         End If
-            If Asc(e.KeyChar) = Keys.Enter Then
+        If Asc(e.KeyChar) = Keys.Enter Then
             cmdNext.Focus()
             cmdNext.PerformClick()
             e.Handled = True
@@ -658,8 +693,6 @@ Public Class frmMain
                 If i = 4 Then cmdAddArtn.Visible = False
                 If cmdDelArtn.Visible = False Then cmdDelArtn.Visible = True
                 subResizePB() '("Add")
-                'pbImage.Height = pbImage.Height - 30
-                'pbImage.Location = New Point(pbImage.Location.X, Me.Controls.Find("cmbArtn" & i, True)(0).Location.Y + 30)
                 Exit For
             End If
         Next
@@ -674,27 +707,24 @@ Public Class frmMain
                 If cmdAddArtn.Visible = False Then cmdAddArtn.Visible = True
                 If i = 2 Then cmdDelArtn.Visible = False
                 subResizePB() '("Del")
-                'pbImage.Height = pbImage.Height + 30
-                'pbImage.Location = New Point(pbImage.Location.X, Me.Controls.Find("cmbArtn" & i, True)(0).Location.Y)
                 Exit For
             End If
         Next
     End Sub
 
     Private Sub strFindString(strOCR As String)
-        Dim bFound As Boolean = False, TextLine As String = ""
+        Dim TextLine As String
 
-        If System.IO.File.Exists(policyFile) = True Then
-            Dim objReader As New IO.StreamReader(policyFile)
+        If File.Exists(policyFile) = True Then
+            Dim objReader As New StreamReader(policyFile)
             lblBlink.Text = ""
             lblBlink.BackColor = Color.WhiteSmoke
-            Do While (objReader.Peek() <> -1 And bFound = False)
+            Do While (objReader.Peek() <> -1)
                 TextLine = objReader.ReadLine()
                 If InStr(strOCR, " " & Trim(TextLine) & " ", CompareMethod.Text) Then
                     lblBlink.Text = StrConv(Trim(TextLine), VbStrConv.Uppercase)
                     lblBlink.BackColor = Color.Red
                     Flash()
-                    bFound = True
                     Exit Sub
                 End If
             Loop
@@ -748,33 +778,64 @@ Public Class frmMain
 
             Log_Done("Initiating done")
             If strInFile Is String.Empty Then
-                MsgBox("Invalid input file. Could not save")
+                MsgBox("Invalid input file " & strInFile & ". Could not save")
                 Exit Sub
             End If
 
             RemoveEmptyNodes()
             RemoveBlankLines(xmlDoc.InnerXml)
 
+            Dim tempXMLOutPath As String
             If strInFile.Contains(strPriorPath) And (FormMode.chosenTool = ToolMode.OP) Then
+                tempXMLOutPath = strPriorPath.Replace("Priority\", "QC\Priority\")
                 xmlDoc.Save(strInFile.Replace("Priority\", "QC\Priority\"))
+            ElseIf FormMode.chosenTool = ToolMode.QC Then
+                tempXMLOutPath = strOutPath
+                xmlDoc.Save(strOutPath & Path.GetFileName(strInFile))
             Else
-                xmlDoc.Save(strOutPath & System.IO.Path.GetFileName(strInFile))
+                If RQC_Enabled.ToUpper = "TRUE" Then
+                    If QC_Control <= 0 Then
+                        tempXMLOutPath = strOutPath
+                        xmlDoc.Save(strOutPath & Path.GetFileName(strInFile))
+                        QC_Control = 1
+                    Else
+                        tempXMLOutPath = strOutPath.Replace("Output\", "QC\Output\")
+                        xmlDoc.Save(strOutPath.Replace("Output\", "QC\Output\") & Path.GetFileName(strInFile))
+                        Dim csvText As String
+                        csvText = Date.Now.ToShortDateString
+                        csvText &= ", " & Date.Now.ToLongTimeString
+                        csvText &= ", " & Path.GetFileNameWithoutExtension(strInFile) & vbCrLf
+                        File.AppendAllText(RQCFile, csvText)
+                        If QC_Control >= 3 Then
+                            QC_Control = 0
+                        Else
+                            QC_Control += 1
+                        End If
+                    End If
+                Else
+                    tempXMLOutPath = strOutPath
+                    xmlDoc.Save(strOutPath & Path.GetFileName(strInFile))
+                End If
             End If
             Log_Done("Saving output file done")
 
             On Error Resume Next
-            My.Computer.FileSystem.DeleteFile(strTempPath & System.IO.Path.GetFileName(strInFile))
-            My.Computer.FileSystem.DeleteFile(strCurPath & System.IO.Path.GetFileName(strInFile))
+            My.Computer.FileSystem.DeleteFile(strTempPath & Path.GetFileName(strInFile))
+            My.Computer.FileSystem.DeleteFile(strCurPath & Path.GetFileName(strInFile))
             Log_Done("Moving comp file done")
             Log_Done("Getfiles started")
             For Each file As String In My.Computer.FileSystem.GetFiles(strInPath)
-                If file.Contains(IO.Path.GetFileNameWithoutExtension(strInFile)) Then
-                    My.Computer.FileSystem.MoveFile(file, strOutPath & System.IO.Path.GetFileName(file), True)
+                If file.Contains(Path.GetFileNameWithoutExtension(strInFile)) Then
+                    If strInFile.Contains(strPriorPath) And (FormMode.chosenTool = ToolMode.OP) Then
+                        My.Computer.FileSystem.MoveFile(file, strOutPath & Path.GetFileName(file), True)
+                    Else
+                        My.Computer.FileSystem.MoveFile(file, tempXMLOutPath & Path.GetFileName(file), True)
+                    End If
                 End If
             Next
             Log_Done("Getfiles finished")
-            iCompItems = iCompItems + 1
-            iCompRefs = iCompRefs + xnlCitations.Count
+            iCompItems += 1
+            iCompRefs += xnlCitations.Count
             swCurProd.Stop()
             swCurSusp.Stop()
 
@@ -782,7 +843,10 @@ Public Class frmMain
             Dim DelRefs As Integer = xnlCitations(0).ParentNode.SelectNodes("CI_CITATION[@D='Y']").Count
             Dim InsRefs As Integer = xnlCitations(0).ParentNode.SelectNodes("CI_CITATION[@I='Y']").Count
             Log_Done("Logging started")
-            LogEntry.References_Close = TotRefs + InsRefs - DelRefs
+            LogEntry.Item_Accession = xmlDoc.SelectSingleNode("//ID_ACCESSION").InnerText
+            LogEntry.Item_Itemno = xmlDoc.SelectSingleNode("//ITEM").Attributes.GetNamedItem("ITEMNO").InnerText
+            'LogEntry.References_Close = TotRefs + InsRefs - DelRefs
+            LogEntry.References_Close = TotRefs - DelRefs
             LogEntry.References_Deleted = DelRefs
             LogEntry.References_Inserted = InsRefs
             LogEntry.Session_Production = swCurProd.Elapsed.ToString("hh\:mm\:ss")
@@ -796,12 +860,14 @@ Public Class frmMain
             On Error GoTo 0
             lblCompItems.Text = iCompItems
             lblCompRefs.Text = iCompRefs
-            subClearFields()
+            SubClearFields()
             Log_Done("Fields cleared")
             pbSource.Image = Nothing
+            PBSourceLocation = String.Empty
             lblCurrent.Text = " of "
             xnlCitations = Nothing
-            'System.IO.File.Move(strCurPath & System.IO.Path.GetFileName(strInFile), strCompPath & System.IO.Path.GetFileName(strInFile))
+            lblRemInput.Text = Directory.GetFiles(strInPath, "*.XML").Count
+            lblRemPriority.Text = Directory.GetFiles(strPriorPath, "*.XML").Count
 
             If MsgBox("Do you want to load new item?", MsgBoxStyle.YesNo, "Confirmation") = MsgBoxResult.Yes Then
                 Log_Done("Getting new file")
@@ -816,8 +882,13 @@ Public Class frmMain
                 Else
                     bIsPrior = False
                     Log_Done("Loading new file")
-                    fnLoadFile(strInFile)
-                    Log_Done("New file loaded")
+                    If Not fnLoadFile(strInFile) Then
+                        MessageBox.Show("Unable to delete file in current folder. Manually delete in current folder. File " & Path.GetFileNameWithoutExtension(strInFile) & ".XML")
+                        File.Move(strInFile, strInFile.Replace(".tmp", ".XML"))
+                        Exit Sub
+                    Else
+                        Log_Done("New file loaded")
+                    End If
                 End If
             Else
                 strInFile = ""
@@ -877,6 +948,7 @@ Public Class frmMain
 
     Private Sub txtTitle_Leave(sender As Object, e As EventArgs) Handles txtTitle.Leave
         txtTitle.Text = txtTitle.Text.Trim
+        txtTitle.BackColor = Color.White
         If txtTitle.Text.StartsWith("COMMUNICATION") Then
             If Not Regex.Match(txtTitle.Text, "^(COMMUNICATION)\s{3}\d{4}$").Success Then
                 tsslStatus.Text = "COMMUNICATION should be followed by 3 spaces and then by 4 digits (20 Chars)"
@@ -1183,7 +1255,9 @@ addtitle:
     Private Sub SubClearFields()
         ClearCIInfoFields()
         pbImage.ImageLocation = Nothing
-        'pbSource.ImageLocation = Nothing
+        PBImageLocation = String.Empty
+        pbImage.Image = Nothing
+
         txtOCR.Clear()
         Me.Controls.Find("txtArtn1", True)(0).Text = String.Empty
         Me.Controls.Find("cmbArtn1", True)(0).Text = String.Empty
@@ -1264,7 +1338,9 @@ addtitle:
             If IsNumeric(txtYear.Text) Then
                 txtYear.Text = CInt(txtYear.Text)
             End If
-            txtTitle.Text = StrConv(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText, VbStrConv.Uppercase)
+            Dim ttstr As String = StrConv(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText.Trim, VbStrConv.Uppercase)
+            If ttstr.Length > MAX_TITLE_LENGTH Then ttstr = ttstr.Substring(0, MAX_TITLE_LENGTH)
+            txtTitle.Text = ttstr
             On Error GoTo 0
         Else
             nod = cits(iNum).SelectSingleNode("CI_INFO/CI_PATENT")
@@ -1304,9 +1380,13 @@ addtitle:
         End If
 
         xnlCitations(iNum).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText = inClipName
-        pbImage.ImageLocation = strInPath & Split(inClipName, "\").Last
+        PBImageLocation = String.Empty
+        pbImage.Image = GetMemoryBitmapFromFile(strInPath & Split(inClipName, "\").Last)
+        PBImageLocation = strInPath & Split(inClipName, "\").Last
         If My.Computer.FileSystem.FileExists(strInPath & Split(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last) Then
-            pbSource.ImageLocation = strInPath & Split(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last
+            PBSourceLocation = String.Empty
+            pbSource.Image = GetMemoryBitmapFromFile(strInPath & Split(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last)
+            PBSourceLocation = strInPath & Split(cits(iNum).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last
         End If
         txtOCR.Text = cits(iNum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_BLURB").InnerText
         Dim strARTN As String
@@ -1414,7 +1494,7 @@ addtitle:
             Exit Sub
         ElseIf iNum >= xnlCitations.Count Then
             MsgBox("No more reference to view")
-            subClearFields()
+            SubClearFields()
             lblCurrent.Text = " " & xnlCitations.Count & " of " & xnlCitations.Count
             iNo = xnlCitations.Count
             Exit Sub
@@ -1422,7 +1502,7 @@ addtitle:
 
         iNo = iNum
         lblCurrent.Text = " " & iNum & " of " & xnlCitations.Count
-        subClearFields()
+        SubClearFields()
         For i = 1 To 5
             CType(Me.Controls.Find("cbField" & i, True)(0), CheckBox).Checked = False
         Next
@@ -1445,7 +1525,9 @@ addtitle:
         End If
 
         Try
-            xnlCitations(inum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText = txtTitle.Text.Trim
+            Dim tstr As String = txtTitle.Text.Trim
+            If tstr.Length > MAX_TITLE_LENGTH Then tstr = tstr.Substring(0, MAX_TITLE_LENGTH)
+            xnlCitations(inum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").InnerText = tstr
         Catch ex As Exception
             MakeTree(xnlCitations(inum), "CI_CAPTURE/CI_CAPTURE_TITLE", "", InsertAfter:=xnlCitations(inum).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_BLURB"))
         End Try
@@ -1549,18 +1631,16 @@ addtitle:
                     nd.AppendChild(cd)
                 Else
                     Dim nd As XmlNode = xnlCitations(inum).SelectSingleNode("RI_CITATIONIDENTIFIER[@seq='" & i & "']")
-                    Try
+                    If nd IsNot Nothing Then
                         nd.ParentNode.RemoveChild(nd)
-                    Catch ex As Exception
-                    End Try
+                    End If
                 End If
             Else
-                Try
-                    Dim tnod As XmlNode
-                    tnod = xnlCitations(inum).SelectSingleNode("RI_CITATIONIDENTIFIER[@seq='" & i & "']")
+                Dim tnod As XmlNode
+                tnod = xnlCitations(inum).SelectSingleNode("RI_CITATIONIDENTIFIER[@seq='" & i & "']")
+                If tnod IsNot Nothing Then
                     tnod.ParentNode.RemoveChild(tnod)
-                Catch ex As Exception
-                End Try
+                End If
             End If
         Next
         Dim inClipName As String = String.Empty
@@ -1613,47 +1693,83 @@ addtitle:
             End Try
         End If
         'xmlDoc.Save(Split(xmlDoc.BaseURI, "///").Last)
-        xmlDoc.Save(strTempPath & System.IO.Path.GetFileName(strInFile))
+        xmlDoc.Save(strTempPath & Path.GetFileName(strInFile))
     End Sub
 
     Public Function fnGetXMLFile(strDir As String) As String
         Try
-            'Dim fxml As String = System.IO.Directory.GetFiles(strDir, "*.XML", IO.SearchOption.TopDirectoryOnly)(0)
-            Dim files() = New System.IO.DirectoryInfo(strDir).GetFiles("*.XML", IO.SearchOption.TopDirectoryOnly).OrderBy(Function(fi) fi.LastWriteTime).ToArray
-            Dim fxml As String = files.First.ToString
-            Dim ftmp As String = IO.Path.ChangeExtension(fxml, "tmp")
-            My.Computer.FileSystem.RenameFile(strDir & fxml, ftmp)
-            Return strDir & ftmp
+            'Dim fxml As String = Directory.GetFiles(strDir, "*.XML", SearchOption.TopDirectoryOnly)(0)
+            Dim files() = New DirectoryInfo(strDir).GetFiles("*.XML", SearchOption.TopDirectoryOnly).OrderBy(Function(fi) fi.LastWriteTime).ToArray
+            If files.Count Then
+                Dim fxml As String = files.First.ToString
+                Dim ftmp As String = Path.ChangeExtension(fxml, "tmp")
+                My.Computer.FileSystem.RenameFile(strDir & fxml, ftmp)
+                Return strDir & ftmp
+            Else
+                Return String.Empty
+            End If
         Catch e As Exception
             Return String.Empty
         End Try
     End Function
 
-    Private Sub fnLoadFile(strFile As String)
+    Private Function FormatFilenameForSort(file As String) As String
+        Dim item As String
+        item = Path.GetFileNameWithoutExtension(file).Split("_").LastOrDefault()
+        If IsNumeric(item) Then
+            item = CInt(item).ToString("D20")
+        Else
+            item = New String("0", 20 - item.Length) & item
+        End If
+        Return item
+    End Function
+
+    Private Function SortedArray(files As String()) As String()
+        Return files.OrderBy(Function(f)
+                                 Return FormatFilenameForSort(f)
+                             End Function).ToArray()
+    End Function
+
+    Private Function fnLoadFile(strFile As String) As Boolean
         Log_Load("===========Load started==============")
         Log_Load("Input file " & strFile)
         iNo = 0
         'On Error Resume Next
-        Log_Load("Moving " & strFile & " to " & strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML")
+        Log_Load("Moving " & strFile & " to " & strCurPath & Path.GetFileNameWithoutExtension(strFile) & ".XML")
 
-        If IO.File.Exists(strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML") Then
-            FileSystem.Kill(strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML")
+        If File.Exists(strCurPath & Path.GetFileNameWithoutExtension(strFile) & ".XML") Then
+            On Error GoTo DeleteError
+            FileSystem.Kill(strCurPath & Path.GetFileNameWithoutExtension(strFile) & ".XML")
+            On Error GoTo 0
         End If
-        My.Computer.FileSystem.MoveFile(strFile, strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML", True)
+        My.Computer.FileSystem.MoveFile(strFile, strCurPath & Path.GetFileNameWithoutExtension(strFile) & ".XML", True)
 
         strInFile = strInFile.Replace(".tmp", ".XML")
-        strFile = strCurPath & System.IO.Path.GetFileNameWithoutExtension(strFile) & ".XML"
+        strFile = strCurPath & Path.GetFileNameWithoutExtension(strFile) & ".XML"
         Log_Load("Loading " & strFile)
         '--------------------
+        InitLog(LogEntry)
+        LogEntry.Session_Start_Date = Format(Today, "dd-MM-yyyy")
+        LogEntry.Session_Start_Time = Now.ToShortTimeString
+        LogEntry.Item_Accession = Path.GetFileNameWithoutExtension(strFile).Substring(0, 5) 'xmlDoc.SelectSingleNode("//ID_ACCESSION").InnerText
+        LogEntry.Item_Itemno = Path.GetFileNameWithoutExtension(strFile).Substring(5, 3) ' xmlDoc.SelectSingleNode("//ITEM").Attributes.GetNamedItem("ITEMNO").InnerText
+        LogEntry.References_Open = 0 ' xnlCitations.Count
+        LogEntry.Status = "IP"
+
+        MakeLogEntry(strLogPath & frmLogin.txtUserName.Text & ".XML")
+
         On Error GoTo Error_Loadfile
         xmlDoc.Load(strFile)
         On Error GoTo 0
-        '-----------------
+
+        '-------------------
         cbBackup.Items.Clear()
         frmImages.cbBackup.Items.Clear()
         swCurProd.Restart()
         swCurSusp.Reset()
         tsslStatus.Text = "Loaded file : " & strFile
+        lblRemInput.Text = Directory.GetFiles(strInPath, "*.XML").Count
+        lblRemPriority.Text = Directory.GetFiles(strPriorPath, "*.XML").Count
 
         On Error Resume Next
         lblAccn.Text = xmlDoc.SelectSingleNode("//ID_ACCESSION").InnerText
@@ -1663,14 +1779,16 @@ addtitle:
         lblCurrent.Text = " 0 of " & xnlCitations.Count
         lvlist.Items.Clear()
 
-        InitLog(LogEntry)
-        LogEntry.Session_Start_Date = Format(Today, "dd-MM-yyyy")
-        LogEntry.Session_Start_Time = Now.ToShortTimeString
-        LogEntry.Item_Accession = lblAccn.Text
-        LogEntry.Item_Itemno = lblItem.Text
         LogEntry.References_Open = lblTotalSeq.Text
-        LogEntry.Status = "IP"
-        MakeLogEntry(strLogPath & frmLogin.txtUserName.Text & ".XML")
+
+        'InitLog(LogEntry)
+        'LogEntry.Session_Start_Date = Format(Today, "dd-MM-yyyy")
+        'LogEntry.Session_Start_Time = Now.ToShortTimeString
+        'LogEntry.Item_Accession = lblAccn.Text
+        'LogEntry.Item_Itemno = lblItem.Text
+        'LogEntry.References_Open = lblTotalSeq.Text
+        'LogEntry.Status = "IP"
+        'MakeLogEntry(strLogPath & frmLogin.txtUserName.Text & ".XML")
 
         Dim nodej As XmlNode, nodep As XmlNode
         ReDim bNTR(0 To xnlCitations.Count - 1)
@@ -1723,10 +1841,10 @@ addtitle:
 
                     With lvlist.Items.Add(i + 1)
                         .SubItems.Add(auth)
-                        .SubItems.Add(xnlCitations(i).SelectSingleNode(vol).InnerText)
-                        .SubItems.Add(xnlCitations(i).SelectSingleNode(page).InnerText)
-                        .SubItems.Add(xnlCitations(i).SelectSingleNode(year).InnerText)
-                        .SubItems.Add(xnlCitations(i).SelectSingleNode(title).InnerText)
+                        .SubItems.Add(vol)
+                        .SubItems.Add(page)
+                        .SubItems.Add(year)
+                        .SubItems.Add(title)
                     End With
                 Else
                     Dim auth As String = "&" & xnlCitations(i).SelectSingleNode("CI_INFO/CI_PATENT").Attributes("ID").Value
@@ -1759,49 +1877,58 @@ addtitle:
         'End If
         tempInPath = strInPath
 
-        For Each TIF As String In IO.Directory.GetFiles(tempInPath,
-                                    System.IO.Path.GetFileNameWithoutExtension(strFile) & "_*.TIF", IO.SearchOption.TopDirectoryOnly)
+        For Each TIF As String In SortedArray(Directory.GetFiles(tempInPath, Path.GetFileNameWithoutExtension(strFile) & "_*.TIF", SearchOption.TopDirectoryOnly))
             If FormMode.chosenTool = ToolMode.OP Then
-                If Not TIF.Contains("BU") Then
-                    If Not IO.File.Exists(Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
-                        IO.File.Copy(TIF, Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
-                        cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF) & "-BU")
+                If Not TIF.Contains("-BU") Then
+                    If Not File.Exists(Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
+                        File.Copy(TIF, Replace(TIF, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
+                        cbBackup.Items.Add(Path.GetFileNameWithoutExtension(TIF) & "-BU")
                     End If
                 End If
-                cbBackup.Items.Add(IO.Path.GetFileNameWithoutExtension(TIF))
+                cbBackup.Items.Add(Path.GetFileNameWithoutExtension(TIF))
             ElseIf FormMode.chosenTool = ToolMode.QC Then
-                If TIF.Contains("BU") Then
-                    cbBackup.Items.Add(Replace(IO.Path.GetFileNameWithoutExtension(TIF), "-BU", ""))
+                If TIF.Contains("-BU") Then
+                    cbBackup.Items.Add(Replace(Path.GetFileNameWithoutExtension(TIF), "-BU", ""))
                 End If
             End If
         Next
 
 
         lblSTime.Text = Now.ToShortTimeString
-            strFindString(txtOCR.Text)
+        strFindString(txtOCR.Text)
         txtAuthor.Focus()
         txtAuthor.SelectionStart = 0
         txtAuthor.SelectionLength = 0
         Log_Load("Load finished")
-        Exit Sub
+        Return True
+
 Error_Loadfile:
-        MsgBox("Invalid XML File : " & IO.Path.GetFileName(strFile) & vbCrLf &
+        MsgBox("Invalid XML File : " & Path.GetFileName(strFile) & vbCrLf &
                    "Source files will be moved to Invalid\ folder" & vbCrLf & vbCrLf &
                    "More Details: " & Err.Description, MsgBoxStyle.Exclamation)
         On Error Resume Next
-        IO.File.Move(strFile, Replace(strFile, strCurPath, strInvalidPath))
+        File.Move(strFile, Replace(strFile, strCurPath, strInvalidPath))
         On Error GoTo 0
-        Dim FileLocation As IO.DirectoryInfo = New IO.DirectoryInfo(strInPath)
-        Dim fi As IO.FileInfo() = FileLocation.GetFiles(IO.Path.GetFileNameWithoutExtension(strInFile) & "*.TIF")
+        Dim FileLocation As DirectoryInfo = New DirectoryInfo(strInPath)
+        Dim fi As FileInfo() = FileLocation.GetFiles(Path.GetFileNameWithoutExtension(strInFile) & "*.TIF")
 
         For Each file In fi
-            If Not file.Name.Contains("BU") Then
+            If Not file.Name.Contains("-BU") Then
                 file.CopyTo(Replace(file.FullName, strInPath, strInvalidPath), True)
                 On Error Resume Next
                 file.Delete()
                 On Error GoTo 0
             End If
         Next file
+        LogEntry.References_Close = 0
+        LogEntry.References_Deleted = 0
+        LogEntry.References_Inserted = 0
+        LogEntry.Session_Production = swCurProd.Elapsed.ToString("hh\:mm\:ss")
+        LogEntry.Session_Suspend = swCurSusp.Elapsed.ToString("hh\:mm\:ss")
+        LogEntry.Session_End_Date = Format(Today, "dd-MM-yyyy")
+        LogEntry.Session_End_Time = Now.ToShortTimeString
+        LogEntry.Status = "INC"
+        UpdateLogEntry(strLogPath & frmLogin.txtUserName.Text & ".XML", LogEntry)
         If MsgBox("Do you want to load new item?", MsgBoxStyle.YesNo, "Confirmation") = MsgBoxResult.Yes Then
             strInFile = fnGetXMLFile(strPriorPath)
 
@@ -1813,20 +1940,26 @@ Error_Loadfile:
                 MsgBox("No files for input", MsgBoxStyle.Information)
             Else
                 bIsPrior = False
-                fnLoadFile(strInFile)
+                If Not fnLoadFile(strInFile) Then
+                    MessageBox.Show("Unable to delete file in current folder. Manually delete in current folder. File " & Path.GetFileNameWithoutExtension(strInFile) & ".XML")
+                    File.Move(strInFile, strInFile.Replace(".tmp", ".XML"))
+                End If
             End If
         End If
         Resume Next
 
-    End Sub
+DeleteError:
+        MessageBox.Show("Unable to delete current file. exiting")
+        Return False
+    End Function
 
     Private Sub cmdInter_Click(sender As Object, e As EventArgs) Handles cmdInter.Click
         If MsgBox("Do you want to interrupt this item?", MsgBoxStyle.YesNo, "Confirmation") = MsgBoxResult.Yes Then
-            xmlDoc.Save(strPriorPath & System.IO.Path.GetFileName(strInFile))
-            subClearFields()
+            xmlDoc.Save(strPriorPath & Path.GetFileName(strInFile))
+            SubClearFields()
             Try
-                My.Computer.FileSystem.DeleteFile(strCurPath & System.IO.Path.GetFileName(strInFile))
-                My.Computer.FileSystem.DeleteFile(strTempPath & System.IO.Path.GetFileName(strInFile))
+                My.Computer.FileSystem.DeleteFile(strCurPath & Path.GetFileName(strInFile))
+                My.Computer.FileSystem.DeleteFile(strTempPath & Path.GetFileName(strInFile))
             Catch ex As Exception
             End Try
         End If
@@ -1927,7 +2060,7 @@ Error_Loadfile:
             xnlCitations(iNum).Attributes.Append(xaAttr)
             disableFields()
             lvlist.Items(iNum).ForeColor = Color.Silver
-            subClearFields()
+            SubClearFields()
             Dim nod As XmlNode
             nod = xnlCitations(iNum).SelectSingleNode("CI_INFO/CI_JOURNAL")
             If nod Is Nothing Then
@@ -1983,7 +2116,7 @@ Error_Loadfile:
 
             'subSaveRef()
             'subViewRef(iNum)
-            subClearFields()
+            SubClearFields()
             fnLoadFields(xnlCitations, iNum)
             'iNo = iNum + 1
         End If
@@ -2022,11 +2155,11 @@ Error_Loadfile:
     '            "           <CI_CAPTURE_BLURB></CI_CAPTURE_BLURB>" & cr &
     '            "           <CI_CAPTURE_TITLE></CI_CAPTURE_TITLE>" & cr &
     '            "           <CI_CAPTURE_TITLE_CONF_IND></CI_CAPTURE_TITLE_CONF_IND>" & cr &
-    '            "           <CI_IMAGE_CLIP_NAME>.\" & IO.Path.GetFileNameWithoutExtension(strInFile) & "_" & seqnum & ".TIF</CI_IMAGE_CLIP_NAME>" & cr &
+    '            "           <CI_IMAGE_CLIP_NAME>.\" & Path.GetFileNameWithoutExtension(strInFile) & "_" & seqnum & ".TIF</CI_IMAGE_CLIP_NAME>" & cr &
     '            "       </CI_CAPTURE>" & cr &
     '            "   </CI_CITATION>"
     '    Try
-    '        IO.File.Copy(strInFile.Replace(IO.Path.GetExtension(strInFile), "_" & xnlCitations(iNo).Attributes("seq").Value & ".TIF"), strInFile.Replace(IO.Path.GetExtension(strInFile), "_" & seqnum & ".TIF"))
+    '        File.Copy(strInFile.Replace(Path.GetExtension(strInFile), "_" & xnlCitations(iNo).Attributes("seq").Value & ".TIF"), strInFile.Replace(Path.GetExtension(strInFile), "_" & seqnum & ".TIF"))
     '    Catch ex As Exception
     '        MsgBox(ex.Message)
     '    End Try
@@ -2071,11 +2204,11 @@ Error_Loadfile:
                 "       <CI_CAPTURE>" & cr &
                 "           <CI_CAPTURE_BLURB></CI_CAPTURE_BLURB>" & cr &
                 "           <CI_CAPTURE_TITLE></CI_CAPTURE_TITLE>" & cr &
-                "           <CI_IMAGE_CLIP_NAME>.\" & IO.Path.GetFileNameWithoutExtension(strInFile) & "_" & seqnum & ".TIF</CI_IMAGE_CLIP_NAME>" & cr &
+                "           <CI_IMAGE_CLIP_NAME>.\" & Path.GetFileNameWithoutExtension(strInFile) & "_" & seqnum & ".TIF</CI_IMAGE_CLIP_NAME>" & cr &
                 "       </CI_CAPTURE>" & cr &
                 "   </CI_CITATION>"
         Try
-            IO.File.Copy(strInFile.Replace(IO.Path.GetExtension(strInFile), "_" & xnlCitations(iNo).Attributes("seq").Value & ".TIF"), strInFile.Replace(IO.Path.GetExtension(strInFile), "_" & seqnum & ".TIF"))
+            File.Copy(strInFile.Replace(Path.GetExtension(strInFile), "_" & xnlCitations(iNo).Attributes("seq").Value & ".TIF"), strInFile.Replace(Path.GetExtension(strInFile), "_" & seqnum & ".TIF"))
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -2133,7 +2266,7 @@ Error_Loadfile:
         End Try
         MakeTree(xnlCitations(ref), "CI_CAPTURE/CI_CAPTURE_TITLE", "NON TRADITIONAL REF")
         MakeTree(xnlCitations(ref), "CI_CAPTURE/CI_CAPTURE_BLURB", txtOCR.Text)
-        xmlDoc.Save(strTempPath & System.IO.Path.GetFileName(strInFile))
+        xmlDoc.Save(strTempPath & Path.GetFileName(strInFile))
     End Sub
 
     Private Sub SaveDCI()
@@ -2159,7 +2292,7 @@ Error_Loadfile:
         cdTitle = xmlDoc.CreateCDataSection("DATA OBJECT")
         xnlCitations(ref).SelectSingleNode("CI_CAPTURE/CI_CAPTURE_TITLE").AppendChild(cdTitle)
         MakeTree(xnlCitations(ref), "CI_CAPTURE/CI_CAPTURE_BLURB", txtOCR.Text)
-        xmlDoc.Save(strTempPath & System.IO.Path.GetFileName(strInFile))
+        xmlDoc.Save(strTempPath & Path.GetFileName(strInFile))
     End Sub
 
     Private Sub SaveTitleError()
@@ -2249,7 +2382,7 @@ Error_Loadfile:
                     If InsertAfter IsNot Nothing Then
                         nod = nod.InsertAfter(xeElement, InsertAfter)
                     Else
-                        nod = nod.InsertBefore(xeElement, nod.SelectNodes("CI_CITATION")(0))    'todo: correct possition
+                        nod = nod.InsertBefore(xeElement, nod.SelectNodes("CI_CITATION")(0))
                     End If
                 Else
                     nod = nodnew
@@ -2302,12 +2435,14 @@ Error_Loadfile:
     End Sub
 
     Private Sub cmdZoning_Click(sender As Object, e As EventArgs) Handles cmdZoning.Click
-        pbSource.ImageLocation = strInPath & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\")(1)
+        PBSourceLocation = String.Empty
+        pbSource.Image = GetMemoryBitmapFromFile(strInPath & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\")(1))
+        PBSourceLocation = strInPath & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\")(1)
         subToggleZoning()
     End Sub
 
     Private Sub pbSource_MouseDown(sender As Object, e As MouseEventArgs) Handles pbSource.MouseDown
-        If pbSource.ImageLocation = String.Empty Then Exit Sub
+        If String.IsNullOrEmpty(PBSourceLocation) Or pbSource.Image Is Nothing Then Exit Sub
         If chkFullWidth.Checked Then
             mRect = New Rectangle(0, e.Y, pbSource.Width, 0)
         Else
@@ -2317,7 +2452,7 @@ Error_Loadfile:
     End Sub
 
     Private Sub pbSource_MouseMove(sender As Object, e As MouseEventArgs) Handles pbSource.MouseMove
-        If pbSource.ImageLocation = String.Empty Then Exit Sub
+        If String.IsNullOrEmpty(PBSourceLocation) Or pbSource.Image Is Nothing Then Exit Sub
         If e.Button = Windows.Forms.MouseButtons.Left Then
             If chkFullWidth.Checked Then
                 mRect = New Rectangle(0, mRect.Top, pbSource.Width, e.Y - mRect.Top)
@@ -2329,7 +2464,7 @@ Error_Loadfile:
     End Sub
 
     Private Sub pbSource_MouseUp(sender As Object, e As MouseEventArgs) Handles pbSource.MouseUp
-        If pbSource.ImageLocation = String.Empty Then Exit Sub
+        If String.IsNullOrEmpty(PBSourceLocation) Or pbSource.Image Is Nothing Then Exit Sub
         If mRect.IsEmpty Then Exit Sub
         CropImage()
     End Sub
@@ -2341,49 +2476,39 @@ Error_Loadfile:
         End Using
     End Sub
 
-    'Protected Overrides Function ProcessCmdKey(ByRef msg As Message, ByVal keyData As Keys) As Boolean
-    '    If keyData = Keys.Up Then
-    '        If Me.pbSource.Bounds.Contains(Me.PointToClient(Cursor.Position)) Then
-    '            mRect.Location = New Point(mRect.Location.X, mRect.Location.Y - 1)
-    '            pbSource.Invalidate()
-    '            CropImage()
-    '            Return True
-    '        End If
-    '    End If
-    '    If keyData = Keys.Down Then
-    '        If Me.pbSource.Bounds.Contains(Me.PointToClient(Cursor.Position)) Then
-    '            mRect.Location = New Point(mRect.Location.X, mRect.Location.Y + 1)
-    '            pbSource.Invalidate()
-    '            CropImage()
-    '            Return True
-    '        End If
-    '    End If
-    '    If keyData = Keys.Left Then
-    '        If Me.pbSource.Bounds.Contains(Me.PointToClient(Cursor.Position)) Then
-    '            mRect.Location = New Point(mRect.Location.X - 1, mRect.Location.Y)
-    '            pbSource.Invalidate()
-    '            CropImage()
-    '            Return True
-    '        End If
-    '    End If
-    '    If keyData = Keys.Right Then
-    '        If Me.pbSource.Bounds.Contains(Me.PointToClient(Cursor.Position)) Then
-    '            mRect.Location = New Point(mRect.Location.X + 1, mRect.Location.Y)
-    '            pbSource.Invalidate()
-    '            CropImage()
-    '            Return True
-    '        End If
-    '    End If
-    '    Return MyBase.ProcessCmdKey(msg, keyData)
-    'End Function
+
+    Public Shared Function GetMemoryBitmapFromFile(path As String) As Bitmap
+        Dim bm As Bitmap
+        If Not File.Exists(path) Then Return Nothing
+        Using img As Image = Image.FromFile(path)
+            bm = New Bitmap(img)
+        End Using
+        Return bm
+    End Function
 
     Private Sub CropImage()
-        Dim fileName = pbSource.ImageLocation
-        If fileName Is Nothing Then Exit Sub
+        If String.IsNullOrWhiteSpace(PBSourceLocation) Or pbSource.Image Is Nothing Then Exit Sub
         If mRect.IsEmpty Then Exit Sub
         If mRect.Width * mRect.Height = 0 Then Exit Sub
+
+        Dim fileName = PBSourceLocation
         Dim CropRect As New Rectangle(mRect.Left, mRect.Top, mRect.Width, mRect.Height)
-        Dim OriginalImage = Image.FromFile(fileName)
+        Dim OriginalImage
+        If File.Exists(fileName) Then
+            OriginalImage = GetMemoryBitmapFromFile(fileName)
+        Else
+            If fileName.Contains("-BU.TIF") Then
+                If (File.Exists(fileName.Replace("-BU.TIF", ".TIF"))) Then
+                    OriginalImage = GetMemoryBitmapFromFile(fileName.Replace("-BU.TIF", ".TIF"))
+                    fileName = fileName.Replace("-BU.TIF", ".TIF")
+                Else
+                    Exit Sub
+                End If
+            Else
+                Exit Sub
+            End If
+        End If
+
         Dim CropImage As Bitmap = Nothing
         Try
             CropImage = New Bitmap(CropRect.Width, CropRect.Height)
@@ -2394,27 +2519,36 @@ Error_Loadfile:
         Using grp = Graphics.FromImage(CropImage)
             grp.DrawImage(OriginalImage, New Rectangle(0, 0, CropRect.Width, CropRect.Height), CropRect, GraphicsUnit.Pixel)
             OriginalImage.Dispose()
-            'CropImage.Save(IO.Path.GetDirectoryName(fileName) & "\temp.TIF")
+            'CropImage.Save(Path.GetDirectoryName(fileName) & "\temp.TIF")
+            PBImageLocation = String.Empty
             If chkMergeImg.Checked = True Then
                 pbImage.Image = CombineImages(pbImage.Image, CropImage)
             Else
                 pbImage.Image = CropImage
             End If
-            pbImage.Image.Save(IO.Path.GetDirectoryName(fileName) & "\temp.TIF")
-            If Not fileName.Contains("-BU.TIF") Then
-                If Not IO.File.Exists(Replace(fileName, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
-                    My.Computer.FileSystem.RenameFile(fileName, Replace(IO.Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
-                End If
-                'pbSource.ImageLocation = IO.Path.GetDirectoryName(fileName) & "\" & Replace(IO.Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)
-            End If
+            pbImage.Image.Save(Path.GetDirectoryName(fileName) & "\temp.TIF")
 
-            If IO.File.Exists(IO.Path.GetDirectoryName(fileName) & "\" & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last) Then
-                IO.File.Delete(IO.Path.GetDirectoryName(fileName) & "\" & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last)
+            PBImageLocation = Path.GetDirectoryName(fileName) & "\temp.TIF"
+            If Not fileName.Contains("-BU.TIF") Then
+                If Not File.Exists(Replace(fileName, ".TIF", "-BU.TIF", Compare:=CompareMethod.Text)) Then
+                    My.Computer.FileSystem.RenameFile(fileName, Replace(Path.GetFileName(fileName), ".TIF", "-BU.TIF", Compare:=CompareMethod.Text))
+                End If
             End If
+            CropImage.Save(Path.GetDirectoryName(fileName) & "\temp1.TIF")
+            If File.Exists(Path.GetDirectoryName(fileName) & "\" & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last) Then
+                File.Delete(Path.GetDirectoryName(fileName) & "\" & Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last)
+            End If
+            Dim dirname As String, oldfilename As String, newfilename As String
+            dirname = Path.GetDirectoryName(fileName)
+            oldfilename = "temp.TIF"
             Try
-                My.Computer.FileSystem.RenameFile(IO.Path.GetDirectoryName(fileName) & "\temp.TIF", Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last)
+                newfilename = Split(xnlCitations(iNo).SelectSingleNode("CI_CAPTURE/CI_IMAGE_CLIP_NAME").InnerText, "\").Last
+                My.Computer.FileSystem.RenameFile(dirname & "\" & oldfilename, newfilename)
+                PBImageLocation = dirname & "\" & newfilename
             Catch ex As Exception
-                My.Computer.FileSystem.RenameFile(IO.Path.GetDirectoryName(fileName) & "\temp.TIF", lblAccn.Text & CInt(xmlDoc.SelectSingleNode("//ITEM").Attributes("ITEMNO").Value).ToString("D3") & "C_" & xnlCitations.Count & ".TIF")
+                newfilename = lblAccn.Text & CInt(xmlDoc.SelectSingleNode("//ITEM").Attributes("ITEMNO").Value).ToString("D3") & "C_" & xnlCitations.Count & ".TIF"
+                My.Computer.FileSystem.RenameFile(dirname & "\" & oldfilename, newfilename)
+                PBImageLocation = dirname & "\" & newfilename
             End Try
         End Using
     End Sub
@@ -2423,11 +2557,6 @@ Error_Loadfile:
         pnlSource.Visible = Not pnlSource.Visible
         gbZoneTool.Visible = Not gbZoneTool.Visible
     End Sub
-
-    'Private Sub cmdZClose_Click(sender As Object, e As EventArgs) Handles cmdZClose.Click
-    '    subToggleZoning()
-    '    pbSource.Image = Nothing
-    'End Sub
 
     Shared Function getCitations() As XmlNodeList
         Return frmMain.xnlCitations
@@ -2450,7 +2579,7 @@ Error_Loadfile:
     End Sub
 
     Private Sub cmdRefresh_Click(sender As Object, e As EventArgs) Handles cmdRefresh.Click
-        pbImage.ImageLocation = pbImage.ImageLocation
+        pbImage.ImageLocation = PBImageLocation
     End Sub
 
     Private Sub txtArtn1_GotFocus(sender As Object, e As EventArgs) Handles txtArtn1.GotFocus
@@ -2481,22 +2610,32 @@ Error_Loadfile:
             Dim temppath As String
             temppath = strInPath
             If FormMode.chosenTool = ToolMode.OP Then
-                If IO.File.Exists(temppath & cbBackup.Text & ".TIF") Then
-                    pbSource.ImageLocation = temppath & cbBackup.Text & ".TIF"
+                If File.Exists(temppath & cbBackup.Text & ".TIF") Then
+                    PBSourceLocation = String.Empty
+                    pbSource.Image = GetMemoryBitmapFromFile(temppath & cbBackup.Text & ".TIF")
+                    PBSourceLocation = temppath & cbBackup.Text & ".TIF"
+                ElseIf File.Exists(temppath & cbBackup.Text & "-BU.TIF") Then
+                    PBSourceLocation = String.Empty
+                    pbSource.Image = GetMemoryBitmapFromFile(temppath & cbBackup.Text & "-BU.TIF")
+                    PBSourceLocation = temppath & cbBackup.Text & "-BU.TIF"
                 Else
-                    MsgBox("Invalid file name")
+                    MsgBox("Invalid file name Or file does Not exist.")
                     Exit Sub
                 End If
             Else
-                If IO.File.Exists(temppath & cbBackup.Text & "-BU.TIF") Then
-                    pbSource.ImageLocation = temppath & cbBackup.Text & "-BU.TIF"
+                If File.Exists(temppath & cbBackup.Text & "-BU.TIF") Then
+                    PBSourceLocation = String.Empty
+                    pbSource.Image = GetMemoryBitmapFromFile(temppath & cbBackup.Text & "-BU.TIF")
+                    PBSourceLocation = temppath & cbBackup.Text & "-BU.TIF"
+                ElseIf File.Exists(temppath & cbBackup.Text & ".TIF") Then
+                    PBSourceLocation = String.Empty
+                    pbSource.Image = GetMemoryBitmapFromFile(temppath & cbBackup.Text & ".TIF")
+                    PBSourceLocation = temppath & cbBackup.Text & ".TIF"
                 Else
                     MsgBox("Invalid file name")
                     Exit Sub
                 End If
             End If
-
-
         End If
     End Sub
 
@@ -2505,7 +2644,7 @@ Error_Loadfile:
     '        Dim inum As Integer = CInt(Trim(Split(lblCurrent.Text, "of")(0)))
     '        'Dim nod As XmlNode
     '        'If Trim(txtTitle.Text) = vbNullString Then
-    '        '    MsgBox("Title should not be empty", MsgBoxStyle.Information, "Verify")
+    '        '    MsgBox("Title should Not be empty", MsgBoxStyle.Information, "Verify")
     '        '    'Exit Sub
     '        'End If
 
@@ -2582,7 +2721,7 @@ Error_Loadfile:
     '            Catch ex As Exception
     '            End Try
     '        End If
-    '        xmlDoc.Save(strTempPath & System.IO.Path.GetFileName(strInFile))
+    '        xmlDoc.Save(strTempPath & Path.GetFileName(strInFile))
     '        'Try
     '        '    xmlDoc.Save(Split(xmlDoc.BaseURI, "///").Last)
     '        'Catch ex As Exception
@@ -2594,72 +2733,7 @@ Error_Loadfile:
     Private Sub SavePatent()
 
         Dim inum As Integer = CInt(Trim(Split(lblCurrent.Text, "of")(0)))
-        'Dim nod As XmlNode
 
-        ''----------------------------
-        'nod = Nothing
-        'nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_JOURNAL")
-        'If nod IsNot Nothing Then
-        '    nod.ParentNode.RemoveChild(nod)
-        'End If
-        'MakeTree(xnlCitations(inum), "CI_INFO", "", InsertFirst:=True)
-        'Dim attr As XmlAttribute
-        'Try
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT").Attributes("ID")
-        '    nod.Value = txtAuthor.Text.Replace("&", String.Empty)
-        'Catch ex As Exception
-        '    Dim root As XmlNode = xmlDoc.DocumentElement
-        '    Dim elem As XmlElement = xmlDoc.CreateElement("CI_PATENT")
-        '    attr = xmlDoc.CreateAttribute("ID")
-        '    attr.Value = txtAuthor.Text.Replace("&", String.Empty)
-        '    elem.Attributes.Append(attr)
-        '    xnlCitations(inum).SelectSingleNode("CI_INFO").AppendChild(elem)
-        'End Try
-
-        'nod = Nothing
-        'Try
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_VOLUME")
-        '    nod.InnerText = CInt(txtVolume.Text.Trim).ToString("D4")
-        'Catch ex As Exception
-        '    MakeTree(xnlCitations(inum), "CI_INFO/CI_PATENT/PATENT_VOLUME", "", InsertFirst:=True)
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_VOLUME")
-        '    nod.InnerText = txtVolume.Text.Trim
-        'End Try
-
-        'nod = Nothing
-        'Try
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_PAGE")
-        '    If IsNumeric(txtPage.Text.Trim) Then
-        '        nod.InnerText = CInt(txtPage.Text.Trim).ToString("D5")
-        '    Else
-        '        nod.InnerText = txtPage.Text.Trim
-        '    End If
-        'Catch ex As Exception
-        '    MakeTree(xnlCitations(inum), "CI_INFO/CI_PATENT/PATENT_PAGE", "", InsertAfter:=xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_VOLUME"))
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_PAGE")
-        '    nod.InnerText = txtPage.Text.Trim
-        'End Try
-
-        'nod = Nothing
-        'Try
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_YEAR")
-        '    nod.InnerText = txtYear.Text.Trim
-        'Catch ex As Exception
-        '    MakeTree(xnlCitations(inum), "CI_INFO/CI_PATENT/PATENT_YEAR", "", InsertAfter:=xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_PAGE"))
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_YEAR")
-        '    nod.InnerText = txtYear.Text.Trim
-        'End Try
-
-        'nod = Nothing
-        'Try
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_ASSIGNEE")
-        '    nod.InnerText = txtTitle.Text.Trim
-        'Catch ex As Exception
-        '    MakeTree(xnlCitations(inum), "CI_INFO/CI_PATENT/PATENT_ASSIGNEE", "", InsertAfter:=xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_YEAR"))
-        '    nod = xnlCitations(inum).SelectSingleNode("CI_INFO/CI_PATENT/PATENT_ASSIGNEE")
-        '    nod.InnerText = txtTitle.Text.Trim
-        'End Try
-        ''---------------------------
         RemoveCIInfoChildren(xnlCitations(inum))
         MakeCIInfoPatent(xnlCitations(inum))
 
@@ -2714,7 +2788,7 @@ Error_Loadfile:
             Catch ex As Exception
             End Try
         End If
-        xmlDoc.Save(strTempPath & System.IO.Path.GetFileName(strInFile))
+        xmlDoc.Save(strTempPath & Path.GetFileName(strInFile))
 
     End Sub
 
@@ -2822,16 +2896,16 @@ Error_Loadfile:
             If strInFile Is String.Empty Then Exit Sub
 
             'On Error Resume Next
-            'My.Computer.FileSystem.DeleteFile(strQueryPath & System.IO.Path.GetFileName(strInFile))
+            'My.Computer.FileSystem.DeleteFile(strQueryPath & Path.GetFileName(strInFile))
             Try
-                My.Computer.FileSystem.MoveFile(strCurPath & System.IO.Path.GetFileName(strInFile), strQueryPath & System.IO.Path.GetFileName(strInFile), True)
+                My.Computer.FileSystem.MoveFile(strCurPath & Path.GetFileName(strInFile), strQueryPath & Path.GetFileName(strInFile), True)
             Catch ex As Exception
             End Try
 
             For Each file As String In My.Computer.FileSystem.GetFiles(strInPath)
-                If file.Contains(IO.Path.GetFileNameWithoutExtension(strInFile)) Then
+                If file.Contains(Path.GetFileNameWithoutExtension(strInFile)) Then
                     Try
-                        My.Computer.FileSystem.MoveFile(file, strQueryPath & System.IO.Path.GetFileName(file), True)
+                        My.Computer.FileSystem.MoveFile(file, strQueryPath & Path.GetFileName(file), True)
                     Catch ex As Exception
                     End Try
                 End If
@@ -2859,11 +2933,12 @@ Error_Loadfile:
             UpdateLogEntry(strLogPath & frmLogin.txtUserName.Text & ".XML", LogEntry)
             lblCompItems.Text = iCompItems
             lblCompRefs.Text = iCompRefs
-            subClearFields()
+            SubClearFields()
             pbSource.Image = Nothing
+            PBSourceLocation = String.Empty
             lblCurrent.Text = " of "
 
-            'System.IO.File.Move(strCurPath & System.IO.Path.GetFileName(strInFile), strCompPath & System.IO.Path.GetFileName(strInFile))
+            'File.Move(strCurPath & Path.GetFileName(strInFile), strCompPath & Path.GetFileName(strInFile))
             If MsgBox("Do you want to load new item?", MsgBoxStyle.YesNo, "Confirmation") = MsgBoxResult.Yes Then
                 strInFile = fnGetXMLFile(strPriorPath)
 
@@ -2875,7 +2950,13 @@ Error_Loadfile:
                     MsgBox("No files for input", MsgBoxStyle.Information)
                 Else
                     bIsPrior = False
-                    fnLoadFile(strInFile)
+                    If Not fnLoadFile(strInFile) Then
+                        MessageBox.Show("Unable to delete file in current folder. Manually delete in current folder. File " & Path.GetFileNameWithoutExtension(strInFile) & ".XML")
+                        File.Move(strInFile, strInFile.Replace(".tmp", ".XML"))
+                        Exit Sub
+                    Else
+                        Log_Done("New file loaded")
+                    End If
                 End If
             Else
                 strInFile = ""
@@ -2916,8 +2997,8 @@ Error_Loadfile:
 
     Private Function MakeDirectory(strDir As String) As Boolean
         Try
-            If Not IO.Directory.Exists(strDir) Then
-                IO.Directory.CreateDirectory(strDir)
+            If Not Directory.Exists(strDir) Then
+                Directory.CreateDirectory(strDir)
             End If
             Return True
         Catch ex As Exception
@@ -2966,7 +3047,7 @@ Error_Loadfile:
     End Sub
 
     Private Sub MakeLogFile(filename As String)
-        If Not IO.File.Exists(filename) Then
+        If Not File.Exists(filename) Then
             Dim writer As New XmlTextWriter(filename, System.Text.Encoding.UTF8)
             writer.WriteStartDocument(True)
             writer.Formatting = Formatting.Indented
@@ -2986,13 +3067,13 @@ Error_Loadfile:
                 tsb.AppendLine("In the case of corrupt, it will be backed up and New DB file will be created")
                 MsgBox(tsb.ToString)
                 Try
-                    My.Computer.FileSystem.RenameFile(filename, IO.Path.GetFileName(filename) & ".backup")
+                    My.Computer.FileSystem.RenameFile(filename, Path.GetFileName(filename) & ".backup")
                 Catch ex1 As Exception
                     Dim i As Integer = 1
-                    While (IO.File.Exists(IO.Path.GetFileName(filename) & ".backup" & i))
+                    While (File.Exists(Path.GetFileName(filename) & ".backup" & i))
                         i = i + 1
                     End While
-                    My.Computer.FileSystem.RenameFile(filename, IO.Path.GetFileName(filename) & ".backup" & i)
+                    My.Computer.FileSystem.RenameFile(filename, Path.GetFileName(filename) & ".backup" & i)
                 End Try
 
                 Dim writer As New XmlTextWriter(filename, System.Text.Encoding.UTF8)
@@ -3009,7 +3090,7 @@ Error_Loadfile:
         tsslStatus.Text = "Created"
     End Sub
 
-    Private Sub InitLog(ByRef LE As Log)
+    Private Sub InitLog(ByRef LE As UserLog)
         LE.Session_Start_Date = ""
         LE.Session_Start_Time = ""
         LE.Session_End_Date = ""
@@ -3121,7 +3202,7 @@ Error_Loadfile:
         xdDoc.Save(filename)
     End Sub
 
-    Private Sub UpdateLogEntry(ByVal filename As String, LE As Log)
+    Private Sub UpdateLogEntry(ByVal filename As String, LE As UserLog)
         Dim xddoc As New XmlDocument, lChild As XmlNode
         Try
             xddoc.Load(filename)
@@ -3155,13 +3236,13 @@ Error_Loadfile:
 
     Private Sub Log_Load(strLog As String)
         If EnableLogToolStripMenuItem.Checked Then
-            IO.File.AppendAllText(LogLoadFile, Now.ToString("hh:mm:ss") & " : " & strLog & Environment.NewLine)
+            File.AppendAllText(LogLoadFile, Now.ToString("hh:mm:ss") & " : " & strLog & Environment.NewLine)
         End If
     End Sub
 
     Private Sub Log_Done(strLog As String)
         If EnableLogToolStripMenuItem.Checked Then
-            IO.File.AppendAllText(LogDoneFile, Now.ToString("hh:mm:ss") & " : " & strLog & Environment.NewLine)
+            File.AppendAllText(LogDoneFile, Now.ToString("hh:mm:ss") & " : " & strLog & Environment.NewLine)
         End If
     End Sub
 
@@ -3185,7 +3266,7 @@ Error_Loadfile:
             End If
         End If
 
-        If System.IO.File.Exists(RepFile) = True Then
+        If File.Exists(RepFile) = True Then
             Dim xmlRep As New XmlDocument
             xmlRep.Load(RepFile)
             reps = xmlRep.SelectNodes("DCI-Repository/Repository")
@@ -3460,7 +3541,7 @@ Error_Loadfile:
             Dim EmptyNodes As XmlNodeList = xmlDoc.SelectNodes("//*[not(descendant::text()[normalize-space()])]")
             For Each emptyNode As XmlNode In EmptyNodes
                 Select Case emptyNode.Name
-                    Case "CI_TITLE", "CI_INFO", "CI_JOURNAL"
+                    Case "CI_TITLE", "CI_INFO", "CI_JOURNAL", "CI_CAPTURE_TITLE"
 
                     Case Else
                         emptyNode.ParentNode.RemoveChild(emptyNode)
@@ -3499,6 +3580,7 @@ Error_Loadfile:
             MakeCIInfoJournal(cit)
         End If
     End Sub
+
 
     Private Sub MakeCIInfoJournal(cit As XmlNode)
         Dim xnode As XmlNode, xnode1 As XmlNode
@@ -3569,6 +3651,20 @@ Error_Loadfile:
         attr.Value = txtAuthor.Text.Replace("&", "")
         xnode.Attributes.Append(attr)
 
+        txtTitle.Text = txtTitle.Text.Trim
+        If txtTitle.Text <> "" Then
+            xnode1 = cit.OwnerDocument.CreateElement("PATENT_ASSIGNEE")
+            xnode1.InnerText = txtTitle.Text
+            xnode.AppendChild(xnode1)
+        End If
+
+        txtYear.Text = txtYear.Text.Trim
+        If txtYear.Text <> "" Then
+            xnode1 = cit.OwnerDocument.CreateElement("PATENT_YEAR")
+            xnode1.InnerText = txtYear.Text
+            xnode.AppendChild(xnode1)
+        End If
+
         txtVolume.Text = txtVolume.Text.Trim
         If txtVolume.Text <> "" Then
             xnode1 = cit.OwnerDocument.CreateElement("PATENT_VOLUME")
@@ -3591,27 +3687,13 @@ Error_Loadfile:
             xnode.AppendChild(xnode1)
         End If
 
-        txtYear.Text = txtYear.Text.Trim
-        If txtYear.Text <> "" Then
-            xnode1 = cit.OwnerDocument.CreateElement("PATENT_YEAR")
-            xnode1.InnerText = txtYear.Text
-            xnode.AppendChild(xnode1)
-        End If
-
-        txtTitle.Text = txtTitle.Text.Trim
-        If txtTitle.Text <> "" Then
-            xnode1 = cit.OwnerDocument.CreateElement("PATENT_ASSIGNEE")
-            xnode1.InnerText = txtTitle.Text
-            xnode.AppendChild(xnode1)
-        End If
         cit.SelectSingleNode("CI_INFO").AppendChild(xnode)
     End Sub
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        Dim sbAbout As New System.Text.StringBuilder
-        sbAbout.AppendLine("DE Master for VIL")
-        sbAbout.AppendLine("Version 12.4.5")
-        sbAbout.AppendLine("Stamp 1908101431")
+        Dim sbAbout As New Text.StringBuilder
+        sbAbout.AppendLine(ProductName)
+        sbAbout.AppendLine("Version " + My.Application.Info.Version.ToString)
         MsgBox(sbAbout.ToString)
     End Sub
 

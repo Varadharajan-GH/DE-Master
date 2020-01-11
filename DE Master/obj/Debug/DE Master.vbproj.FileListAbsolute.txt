@@ -30,14 +30,35 @@ D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.exe.config
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.exe
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.pdb
 D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DE Master.xml
+D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbprojAssemblyReference.cache
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmLogin.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmMain.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmImages.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.frmChoose.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE_Master.Resources.resources
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbproj.GenerateResource.cache
-D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbproj.CoreCompileInputs.cache
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.exe
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.xml
 D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.pdb
-D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbprojAssemblyReference.cache
+D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DEM_VIL_Library.dll
+D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DEM_VIL_Library.pdb
+D:\Programs\VS.Net\VB\DE Master\DE Master\bin\Debug\DEM_VIL_Library.xml
+D:\Programs\VS.Net\VB\DE Master\DE Master\obj\Debug\DE Master.vbproj.CopyComplete
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DE Master.exe.config
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DE Master.exe
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DE Master.pdb
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DE Master.xml
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DEM_VIL_Library.dll
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DEM_VIL_Library.pdb
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\bin\Debug\DEM_VIL_Library.xml
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.vbprojAssemblyReference.cache
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE_Master.frmLogin.resources
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE_Master.frmMain.resources
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE_Master.frmImages.resources
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE_Master.frmChoose.resources
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE_Master.Resources.resources
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.vbproj.GenerateResource.cache
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.vbproj.CopyComplete
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.exe
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.xml
+D:\Programs\VS.Net\VB\DE Master 12.8.1\DE Master\obj\Debug\DE Master.pdb

@@ -96,21 +96,8 @@ Partial Class frmMain
         Me.rbVolume = New System.Windows.Forms.RadioButton()
         Me.rbTitle = New System.Windows.Forms.RadioButton()
         Me.cbField1 = New System.Windows.Forms.CheckBox()
-        Me.gbAccn = New System.Windows.Forms.GroupBox()
-        Me.lblUName = New System.Windows.Forms.Label()
-        Me.lblAccn = New System.Windows.Forms.Label()
-        Me.lblItem = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
         Me.cbField2 = New System.Windows.Forms.CheckBox()
         Me.cbField3 = New System.Windows.Forms.CheckBox()
-        Me.gbTime = New System.Windows.Forms.GroupBox()
-        Me.lblProdTime = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.lblSTime = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.lblSuspTime = New System.Windows.Forms.Label()
         Me.cbField4 = New System.Windows.Forms.CheckBox()
         Me.cbField5 = New System.Windows.Forms.CheckBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -134,11 +121,28 @@ Partial Class frmMain
         Me.cmdDelRef = New System.Windows.Forms.Button()
         Me.cmdAddRef = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.gbAccn = New System.Windows.Forms.GroupBox()
+        Me.lblUName = New System.Windows.Forms.Label()
+        Me.lblAccn = New System.Windows.Forms.Label()
+        Me.lblItem = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.gbTime = New System.Windows.Forms.GroupBox()
+        Me.lblProdTime = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lblSTime = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.lblSuspTime = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.lblRemInput = New System.Windows.Forms.Label()
+        Me.lblRemPriority = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.pnlDesImage = New System.Windows.Forms.Panel()
         Me.pbImage = New System.Windows.Forms.PictureBox()
         Me.pnlSource = New System.Windows.Forms.Panel()
         Me.pbSource = New System.Windows.Forms.PictureBox()
-        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.cmdRefresh = New System.Windows.Forms.Button()
         Me.gbZoneTool = New System.Windows.Forms.GroupBox()
         Me.chkMergeImg = New System.Windows.Forms.CheckBox()
@@ -156,17 +160,17 @@ Partial Class frmMain
         Me.GroupBox1.SuspendLayout()
         Me.ssStatus.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        Me.gbAccn.SuspendLayout()
-        Me.gbTime.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.gbEntry1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.gbAccn.SuspendLayout()
+        Me.gbTime.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
         Me.pnlDesImage.SuspendLayout()
         CType(Me.pbImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSource.SuspendLayout()
         CType(Me.pbSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel3.SuspendLayout()
         Me.gbZoneTool.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -819,68 +823,6 @@ Partial Class frmMain
         Me.cbField1.Text = "Author"
         Me.cbField1.UseVisualStyleBackColor = True
         '
-        'gbAccn
-        '
-        Me.gbAccn.Controls.Add(Me.lblUName)
-        Me.gbAccn.Controls.Add(Me.lblAccn)
-        Me.gbAccn.Controls.Add(Me.lblItem)
-        Me.gbAccn.Controls.Add(Me.Label11)
-        Me.gbAccn.Controls.Add(Me.Label12)
-        Me.gbAccn.Location = New System.Drawing.Point(7, -6)
-        Me.gbAccn.Name = "gbAccn"
-        Me.gbAccn.Size = New System.Drawing.Size(175, 77)
-        Me.gbAccn.TabIndex = 0
-        Me.gbAccn.TabStop = False
-        '
-        'lblUName
-        '
-        Me.lblUName.AutoSize = True
-        Me.lblUName.Location = New System.Drawing.Point(-15, 15)
-        Me.lblUName.Name = "lblUName"
-        Me.lblUName.Size = New System.Drawing.Size(0, 16)
-        Me.lblUName.TabIndex = 39
-        Me.lblUName.Visible = False
-        '
-        'lblAccn
-        '
-        Me.lblAccn.AutoSize = True
-        Me.lblAccn.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblAccn.Location = New System.Drawing.Point(86, 15)
-        Me.lblAccn.Name = "lblAccn"
-        Me.lblAccn.Size = New System.Drawing.Size(55, 23)
-        Me.lblAccn.TabIndex = 17
-        Me.lblAccn.Text = "#####"
-        '
-        'lblItem
-        '
-        Me.lblItem.AutoSize = True
-        Me.lblItem.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblItem.Location = New System.Drawing.Point(85, 45)
-        Me.lblItem.Name = "lblItem"
-        Me.lblItem.Size = New System.Drawing.Size(28, 23)
-        Me.lblItem.TabIndex = 17
-        Me.lblItem.Text = "##"
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(8, 46)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(59, 20)
-        Me.Label11.TabIndex = 17
-        Me.Label11.Text = "Item No:"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(8, 15)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(76, 20)
-        Me.Label12.TabIndex = 17
-        Me.Label12.Text = "Accession:"
-        '
         'cbField2
         '
         Me.cbField2.AutoSize = True
@@ -902,80 +844,6 @@ Partial Class frmMain
         Me.cbField3.TabStop = False
         Me.cbField3.Text = "Page"
         Me.cbField3.UseVisualStyleBackColor = True
-        '
-        'gbTime
-        '
-        Me.gbTime.Controls.Add(Me.lblProdTime)
-        Me.gbTime.Controls.Add(Me.Label7)
-        Me.gbTime.Controls.Add(Me.lblSTime)
-        Me.gbTime.Controls.Add(Me.Label8)
-        Me.gbTime.Controls.Add(Me.Label9)
-        Me.gbTime.Controls.Add(Me.lblSuspTime)
-        Me.gbTime.Location = New System.Drawing.Point(7, 65)
-        Me.gbTime.Name = "gbTime"
-        Me.gbTime.Size = New System.Drawing.Size(175, 98)
-        Me.gbTime.TabIndex = 33
-        Me.gbTime.TabStop = False
-        '
-        'lblProdTime
-        '
-        Me.lblProdTime.AutoSize = True
-        Me.lblProdTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProdTime.Location = New System.Drawing.Point(88, 47)
-        Me.lblProdTime.Name = "lblProdTime"
-        Me.lblProdTime.Size = New System.Drawing.Size(67, 19)
-        Me.lblProdTime.TabIndex = 25
-        Me.lblProdTime.Text = "00:00:00"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(8, 18)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(72, 20)
-        Me.Label7.TabIndex = 19
-        Me.Label7.Text = "Start Time:"
-        '
-        'lblSTime
-        '
-        Me.lblSTime.AutoSize = True
-        Me.lblSTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSTime.Location = New System.Drawing.Point(88, 20)
-        Me.lblSTime.Name = "lblSTime"
-        Me.lblSTime.Size = New System.Drawing.Size(67, 19)
-        Me.lblSTime.TabIndex = 20
-        Me.lblSTime.Text = "00:00:00"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(8, 46)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(77, 20)
-        Me.Label8.TabIndex = 23
-        Me.Label8.Text = "Production:"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(8, 73)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(60, 20)
-        Me.Label9.TabIndex = 27
-        Me.Label9.Text = "Supend:"
-        '
-        'lblSuspTime
-        '
-        Me.lblSuspTime.AutoSize = True
-        Me.lblSuspTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSuspTime.Location = New System.Drawing.Point(88, 73)
-        Me.lblSuspTime.Name = "lblSuspTime"
-        Me.lblSuspTime.Size = New System.Drawing.Size(67, 19)
-        Me.lblSuspTime.TabIndex = 28
-        Me.lblSuspTime.Text = "00:00:00"
         '
         'cbField4
         '
@@ -1006,9 +874,9 @@ Partial Class frmMain
         Me.GroupBox3.Controls.Add(Me.Label15)
         Me.GroupBox3.Controls.Add(Me.Label14)
         Me.GroupBox3.Controls.Add(Me.Label13)
-        Me.GroupBox3.Location = New System.Drawing.Point(7, 157)
+        Me.GroupBox3.Location = New System.Drawing.Point(1524, 350)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(175, 98)
+        Me.GroupBox3.Size = New System.Drawing.Size(174, 98)
         Me.GroupBox3.TabIndex = 36
         Me.GroupBox3.TabStop = False
         '
@@ -1244,9 +1112,12 @@ Partial Class frmMain
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.gbAccn)
+        Me.Panel2.Controls.Add(Me.gbTime)
+        Me.Panel2.Controls.Add(Me.GroupBox4)
         Me.Panel2.Controls.Add(Me.pnlDesImage)
+        Me.Panel2.Controls.Add(Me.GroupBox3)
         Me.Panel2.Controls.Add(Me.pnlSource)
-        Me.Panel2.Controls.Add(Me.Panel3)
         Me.Panel2.Controls.Add(Me.cmdRefresh)
         Me.Panel2.Controls.Add(Me.gbZoneTool)
         Me.Panel2.Controls.Add(Me.lblTotalSeq)
@@ -1264,6 +1135,191 @@ Partial Class frmMain
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1800, 950)
         Me.Panel2.TabIndex = 38
+        '
+        'gbAccn
+        '
+        Me.gbAccn.Controls.Add(Me.lblUName)
+        Me.gbAccn.Controls.Add(Me.lblAccn)
+        Me.gbAccn.Controls.Add(Me.lblItem)
+        Me.gbAccn.Controls.Add(Me.Label11)
+        Me.gbAccn.Controls.Add(Me.Label12)
+        Me.gbAccn.Location = New System.Drawing.Point(1334, 273)
+        Me.gbAccn.Name = "gbAccn"
+        Me.gbAccn.Size = New System.Drawing.Size(175, 77)
+        Me.gbAccn.TabIndex = 0
+        Me.gbAccn.TabStop = False
+        '
+        'lblUName
+        '
+        Me.lblUName.AutoSize = True
+        Me.lblUName.Location = New System.Drawing.Point(-15, 15)
+        Me.lblUName.Name = "lblUName"
+        Me.lblUName.Size = New System.Drawing.Size(0, 16)
+        Me.lblUName.TabIndex = 39
+        Me.lblUName.Visible = False
+        '
+        'lblAccn
+        '
+        Me.lblAccn.AutoSize = True
+        Me.lblAccn.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAccn.Location = New System.Drawing.Point(86, 15)
+        Me.lblAccn.Name = "lblAccn"
+        Me.lblAccn.Size = New System.Drawing.Size(55, 23)
+        Me.lblAccn.TabIndex = 17
+        Me.lblAccn.Text = "#####"
+        '
+        'lblItem
+        '
+        Me.lblItem.AutoSize = True
+        Me.lblItem.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblItem.Location = New System.Drawing.Point(85, 45)
+        Me.lblItem.Name = "lblItem"
+        Me.lblItem.Size = New System.Drawing.Size(28, 23)
+        Me.lblItem.TabIndex = 17
+        Me.lblItem.Text = "##"
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.Location = New System.Drawing.Point(8, 46)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(59, 20)
+        Me.Label11.TabIndex = 17
+        Me.Label11.Text = "Item No:"
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.Location = New System.Drawing.Point(8, 15)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(76, 20)
+        Me.Label12.TabIndex = 17
+        Me.Label12.Text = "Accession:"
+        '
+        'gbTime
+        '
+        Me.gbTime.Controls.Add(Me.lblProdTime)
+        Me.gbTime.Controls.Add(Me.Label7)
+        Me.gbTime.Controls.Add(Me.lblSTime)
+        Me.gbTime.Controls.Add(Me.Label8)
+        Me.gbTime.Controls.Add(Me.Label9)
+        Me.gbTime.Controls.Add(Me.lblSuspTime)
+        Me.gbTime.Location = New System.Drawing.Point(1334, 350)
+        Me.gbTime.Name = "gbTime"
+        Me.gbTime.Size = New System.Drawing.Size(175, 98)
+        Me.gbTime.TabIndex = 33
+        Me.gbTime.TabStop = False
+        '
+        'lblProdTime
+        '
+        Me.lblProdTime.AutoSize = True
+        Me.lblProdTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblProdTime.Location = New System.Drawing.Point(88, 47)
+        Me.lblProdTime.Name = "lblProdTime"
+        Me.lblProdTime.Size = New System.Drawing.Size(67, 19)
+        Me.lblProdTime.TabIndex = 25
+        Me.lblProdTime.Text = "00:00:00"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(8, 18)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(72, 20)
+        Me.Label7.TabIndex = 19
+        Me.Label7.Text = "Start Time:"
+        '
+        'lblSTime
+        '
+        Me.lblSTime.AutoSize = True
+        Me.lblSTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSTime.Location = New System.Drawing.Point(88, 20)
+        Me.lblSTime.Name = "lblSTime"
+        Me.lblSTime.Size = New System.Drawing.Size(67, 19)
+        Me.lblSTime.TabIndex = 20
+        Me.lblSTime.Text = "00:00:00"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(8, 46)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(77, 20)
+        Me.Label8.TabIndex = 23
+        Me.Label8.Text = "Production:"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(8, 73)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(60, 20)
+        Me.Label9.TabIndex = 27
+        Me.Label9.Text = "Supend:"
+        '
+        'lblSuspTime
+        '
+        Me.lblSuspTime.AutoSize = True
+        Me.lblSuspTime.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSuspTime.Location = New System.Drawing.Point(88, 73)
+        Me.lblSuspTime.Name = "lblSuspTime"
+        Me.lblSuspTime.Size = New System.Drawing.Size(67, 19)
+        Me.lblSuspTime.TabIndex = 28
+        Me.lblSuspTime.Text = "00:00:00"
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.lblRemInput)
+        Me.GroupBox4.Controls.Add(Me.lblRemPriority)
+        Me.GroupBox4.Controls.Add(Me.Label5)
+        Me.GroupBox4.Controls.Add(Me.Label1)
+        Me.GroupBox4.Location = New System.Drawing.Point(1524, 273)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(174, 77)
+        Me.GroupBox4.TabIndex = 35
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Remaining Items"
+        '
+        'lblRemInput
+        '
+        Me.lblRemInput.AutoSize = True
+        Me.lblRemInput.Location = New System.Drawing.Point(107, 49)
+        Me.lblRemInput.Name = "lblRemInput"
+        Me.lblRemInput.Size = New System.Drawing.Size(22, 16)
+        Me.lblRemInput.TabIndex = 3
+        Me.lblRemInput.Text = "00"
+        '
+        'lblRemPriority
+        '
+        Me.lblRemPriority.AutoSize = True
+        Me.lblRemPriority.Location = New System.Drawing.Point(107, 25)
+        Me.lblRemPriority.Name = "lblRemPriority"
+        Me.lblRemPriority.Size = New System.Drawing.Size(22, 16)
+        Me.lblRemPriority.TabIndex = 2
+        Me.lblRemPriority.Text = "00"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(23, 49)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(41, 16)
+        Me.Label5.TabIndex = 1
+        Me.Label5.Text = "Input:"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(23, 25)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(53, 16)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Priority:"
         '
         'pnlDesImage
         '
@@ -1308,16 +1364,6 @@ Partial Class frmMain
         Me.pbSource.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.pbSource.TabIndex = 0
         Me.pbSource.TabStop = False
-        '
-        'Panel3
-        '
-        Me.Panel3.Controls.Add(Me.gbAccn)
-        Me.Panel3.Controls.Add(Me.gbTime)
-        Me.Panel3.Controls.Add(Me.GroupBox3)
-        Me.Panel3.Location = New System.Drawing.Point(1344, 268)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(203, 263)
-        Me.Panel3.TabIndex = 33
         '
         'cmdRefresh
         '
@@ -1461,10 +1507,6 @@ Partial Class frmMain
         Me.ssStatus.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.gbAccn.ResumeLayout(False)
-        Me.gbAccn.PerformLayout()
-        Me.gbTime.ResumeLayout(False)
-        Me.gbTime.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         Me.gbEntry1.ResumeLayout(False)
@@ -1473,13 +1515,18 @@ Partial Class frmMain
         Me.GroupBox2.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.gbAccn.ResumeLayout(False)
+        Me.gbAccn.PerformLayout()
+        Me.gbTime.ResumeLayout(False)
+        Me.gbTime.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
         Me.pnlDesImage.ResumeLayout(False)
         Me.pnlDesImage.PerformLayout()
         CType(Me.pbImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlSource.ResumeLayout(False)
         Me.pnlSource.PerformLayout()
         CType(Me.pbSource, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel3.ResumeLayout(False)
         Me.gbZoneTool.ResumeLayout(False)
         Me.gbZoneTool.PerformLayout()
         Me.ResumeLayout(False)
@@ -1549,20 +1596,8 @@ Partial Class frmMain
     Friend WithEvents rbVolume As System.Windows.Forms.RadioButton
     Friend WithEvents rbTitle As System.Windows.Forms.RadioButton
     Friend WithEvents cbField1 As System.Windows.Forms.CheckBox
-    Friend WithEvents gbAccn As System.Windows.Forms.GroupBox
-    Friend WithEvents lblAccn As System.Windows.Forms.Label
-    Friend WithEvents lblItem As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents cbField2 As System.Windows.Forms.CheckBox
     Friend WithEvents cbField3 As System.Windows.Forms.CheckBox
-    Friend WithEvents gbTime As System.Windows.Forms.GroupBox
-    Friend WithEvents lblProdTime As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents lblSTime As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents lblSuspTime As System.Windows.Forms.Label
     Friend WithEvents cbField4 As System.Windows.Forms.CheckBox
     Friend WithEvents cbField5 As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
@@ -1580,7 +1615,6 @@ Partial Class frmMain
     Friend WithEvents DeleteRefToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents cmdDelRef As System.Windows.Forms.Button
     Friend WithEvents cmdAddRef As System.Windows.Forms.Button
-    Friend WithEvents lblUName As System.Windows.Forms.Label
     Friend WithEvents cmdGoto As System.Windows.Forms.Button
     Friend WithEvents txtGoto As System.Windows.Forms.TextBox
     Friend WithEvents Label16 As System.Windows.Forms.Label
@@ -1595,7 +1629,6 @@ Partial Class frmMain
     Friend WithEvents cmdViewAll As System.Windows.Forms.Button
     Friend WithEvents lblTotalSeq As System.Windows.Forms.Label
     Friend WithEvents cmdRefresh As System.Windows.Forms.Button
-    Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents rbARTN4 As System.Windows.Forms.RadioButton
     Friend WithEvents rbARTN3 As System.Windows.Forms.RadioButton
@@ -1614,4 +1647,22 @@ Partial Class frmMain
     Friend WithEvents chkTitErr As System.Windows.Forms.CheckBox
     Friend WithEvents lblRepName As System.Windows.Forms.Label
     Friend WithEvents EnableLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents gbAccn As GroupBox
+    Friend WithEvents lblUName As Label
+    Friend WithEvents lblAccn As Label
+    Friend WithEvents lblItem As Label
+    Friend WithEvents Label11 As Label
+    Friend WithEvents Label12 As Label
+    Friend WithEvents gbTime As GroupBox
+    Friend WithEvents lblProdTime As Label
+    Friend WithEvents Label7 As Label
+    Friend WithEvents lblSTime As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Label9 As Label
+    Friend WithEvents lblSuspTime As Label
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents lblRemInput As Label
+    Friend WithEvents lblRemPriority As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents Label1 As Label
 End Class

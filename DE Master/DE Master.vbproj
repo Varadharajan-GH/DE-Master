@@ -189,6 +189,12 @@
     <None Include="Resources\Add.png" />
     <None Include="Resources\DE Master 16.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DEM_VIL_Library\DEM_VIL_Library.vbproj">
+      <Project>{c52d1477-0b85-4be5-bd73-7d8412e098ae}</Project>
+      <Name>DEM_VIL_Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
